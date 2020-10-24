@@ -33,6 +33,7 @@ function onLoad() {
 
             newDiv.style.display = 'inline-block';
             newDiv.id = `${column}:${row}`;
+            newDiv.isMarked = false;
 
             newRow.appendChild(newDiv);
         }
@@ -40,7 +41,7 @@ function onLoad() {
         container.appendChild(newRow);
     }
 
-    drawSnake();
+    drawBrick();
 
     document.addEventListener('keydown', e => {
         switch (e.key) {
@@ -58,49 +59,97 @@ function onLoad() {
                 break;
         }
 
-        drawSnake();
+        drawBrick(e.key);
     })
 }
 
-snake = {
-    pos: [{x:5,y:5},{x:6,y:5},{x:7,y:5},{x:8,y:5},{x:9,y:5},{x:10,y:5}]
-}
+let brick = {
+    item: [
+        [0,1],
+        [0,1],
+        [1,1]
+    ],
+    pos: {
+        x: 5,
+        y: 5
+    }
+};
 
 function move(direction) {
-    let newX;
-    let newY;
-
-    if (direction === 'up') {
-        newY = snake.pos[snake.pos.length - 1].y - 1;
-        newX = snake.pos[snake.pos.length - 1].x;
-    } else if (direction === 'down') {
-        newY = snake.pos[snake.pos.length - 1].y + 1;
-        newX = snake.pos[snake.pos.length - 1].x;
-    } else if (direction === 'left') {
-        newY = snake.pos[snake.pos.length - 1].y;
-        newX = snake.pos[snake.pos.length - 1].x - 1;
-    } else if (direction === 'right') {
-        newY = snake.pos[snake.pos.length - 1].y;
-        newX = snake.pos[snake.pos.length - 1].x + 1;
+    if (direction === 'left' && brick.pos.x > 0) {
+        brick.pos.x--;
+    } else if (direction === 'right' && brick.pos.x < xElements) {
+        brick.pos.x++;
+    } else if (direction === 'down' && brick.pos.x + brick.item.length < yElements) {
+        brick.pos.y++;
     }
-
-    let newBrick = {
-        x: newX,
-        y: newY
-    }
-    snake.pos.push(newBrick);
-    let elemToRemId = snake.pos.shift();
-    clear(`${elemToRemId.x}:${elemToRemId.y}`);
 }
 
-function drawSnake() {
-    for (let element of snake.pos) {
-        let id = `${element.x}:${element.y}`;
-        let brick = document.getElementById(id);
+function switchDot(dot, x) {
+    if (x === 'off') {
+        dot.style.backgroundColor = '#879571';
+        dot.style.outlineColor = '#879571';
+    } else if (x === 'on') {
+        dot.style.backgroundColor = '#000';
+        dot.style.outlineColor = '#000';
+        dot.isMarked = true;
+    }
+}
 
-        brick.style.backgroundColor = '#000';
-        brick.style.outlineColor = '#000';
+function toggleDot(dot) {
+    if (dot.style.backgroundColor == '#879571') {
+        dot.style.backgroundColor = '#000';
+        dot.style.outlineColor = '#000';
+    } else {
+        dot.style.backgroundColor = '#879571';
+        dot.style.outlineColor = '#879571';
+    }
+}
 
+function switchOff(dot) {
+    if (dot.isMarked) {
+        dot.style.backgroundColor = '#879571';
+        dot.style.outlineColor = '#879571';
+    }
+}
+
+function drawBrick(direction=null) {
+    let id = `${brick.pos.x}:${brick.pos.y}`;
+
+    for (let row = 0; row < brick.item.length; row++) {
+        for (let col = 0; col < brick.item[0].length; col++) {
+            // console.log(`col: ${col}, row: ${row}`)
+            if (direction == 'ArrowRight' && brick.item[row][col] === 1 && col == 0 ||
+                direction == 'ArrowLeft' && brick.item[row][col] === 1 && col == brick.item[0].length - 1 ||
+                direction == 'ArrowDown' && brick.item[row][col] === 1 && row == 0) {
+                let id;
+
+                switch (direction) {
+                    case 'ArrowRight':
+                        id = `${(brick.pos.x + col) - 1}:${brick.pos.y + row}`;
+                        break;
+                    case 'ArrowLeft':
+                        id = `${(brick.pos.x + col) + 1}:${brick.pos.y + row}`;
+                        break;
+                    case 'ArrowDown':
+                        id = `${(brick.pos.x + col)}:${brick.pos.y + row - 1}`;
+                        break;
+                }
+
+                // console.log(`id: ${id}, dir: ${direction}`);
+                let dot = document.getElementById(id);
+                switchOff(dot);
+            }
+
+            let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
+            let dot = document.getElementById(id);
+            // console.log(id);
+            if (brick.item[row][col] === 0) {
+                switchDot(dot, 'off');
+            } else if (brick.item[row][col] === 1) {
+                switchDot(dot, 'on');
+            }
+        }
     }
 }
 
