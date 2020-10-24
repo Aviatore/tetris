@@ -49,7 +49,7 @@ function onLoad() {
                 move('down');
                 break;
             case "ArrowUp":
-                move('up');
+                rotate();
                 break;
             case "ArrowLeft":
                 move('left');
@@ -65,9 +65,9 @@ function onLoad() {
 
 let brick = {
     item: [
-        [0,1],
-        [0,1],
-        [1,1]
+        [0,1,0],
+        [0,1,0],
+        [1,1,0]
     ],
     pos: {
         x: 5,
@@ -83,6 +83,21 @@ function move(direction) {
     } else if (direction === 'down' && brick.pos.x + brick.item.length < yElements) {
         brick.pos.y++;
     }
+}
+
+function rotate() {
+    let newItem = [];
+
+    for (let col = 0; col <= brick.item[0].length - 1; col++) {
+        let tmp = []
+        for (let row = brick.item.length - 1; row >= 0; row--) {
+            tmp.push(brick.item[row][col]);
+
+        }
+        newItem.push(tmp);
+
+    }
+    brick.item = [...newItem];
 }
 
 function switchDot(dot, x) {
