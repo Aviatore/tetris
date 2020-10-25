@@ -316,5 +316,10 @@ function clear() {
 }
 
 function loop() {
-
+    if (!detectColission('ArrowDown')) {
+        move('ArrowDown')
+        drawBrick('ArrowDown');
+    }
 }
+
+// setInterval(loop, 1000);
