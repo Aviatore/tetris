@@ -2,8 +2,8 @@ var container;
 var container;
 var width = 20;
 var height = 20;
-var xElements = 5;
-var yElements = 5;
+var xElements = 15;
+var yElements = 15;
 var brickMargin = (30 * width) / 200;
 var marginTop = (-5 * width) / 200;
 var outline = (20 * width) / 200;
@@ -69,6 +69,29 @@ function onLoad() {
     })
 }
 
+let bricks = [
+    [
+        [0,1,0],
+        [0,1,0],
+        [1,1,0]
+    ],
+    [
+        [0,0,0],
+        [0,1,0],
+        [1,1,1]
+    ],
+    [
+        [1,1],
+        [1,1]
+    ],
+];
+
+function randomBrick() {
+    let index = Math.floor(Math.random() * bricks.length);
+    console.log(index);
+    return bricks[index];
+}
+
 let brick = {
     item: [
         [0,1,0],
@@ -96,6 +119,8 @@ function placeBrick() {
     }
     brick.pos.x = 1;
     brick.pos.y = 1;
+    brick.item = randomBrick();
+    drawBrick();
 }
 
 function detectColission(direction) {
