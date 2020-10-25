@@ -84,6 +84,12 @@ let bricks = [
         [1,1],
         [1,1]
     ],
+    [
+        [0,0,0,0],
+        [0,0,0,0],
+        [1,1,1,1],
+        [0,0,0,0]
+    ]
 ];
 
 function randomBrick() {
@@ -177,7 +183,7 @@ function detectColission(direction) {
 }
 
 function move(direction) {
-    if (direction === 'ArrowLeft' && brick.pos.x >= 0) {
+    if (direction === 'ArrowLeft') {
         brick.pos.x--;
     } else if (direction === 'ArrowRight') {
         brick.pos.x++;
