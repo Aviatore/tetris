@@ -191,6 +191,19 @@ function move(direction) {
 function rotate() {
     let newItem = [];
 
+    // Solve the problem with brick rotation at the edge
+    if (brick.pos.x + brick.item[0].length - 1 > xElements) {
+        brick.pos.x = xElements - (brick.item[0].length - 1);
+    }
+
+    if (brick.pos.x < 0) {
+        brick.pos.x = 0;
+    }
+
+    if (brick.pos.y + brick.item.length - 1 > yElements) {
+        brick.pos.y = yElements - (brick.item.length - 1);
+    }
+
     for (let col = 0; col <= brick.item[0].length - 1; col++) {
         let tmp = []
         for (let row = brick.item.length - 1; row >= 0; row--) {
