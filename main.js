@@ -43,7 +43,6 @@ function onLoad() {
     }
 
     drawBrick();
-
     document.addEventListener('keydown', e => {
         switch (e.key) {
             // case "ArrowDown":
@@ -86,9 +85,14 @@ let bricks = [
     ],
     [
         [0,0,0,0],
-        [0,0,0,0],
         [1,1,1,1],
+        [0,0,0,0],
         [0,0,0,0]
+    ],
+    [
+        [0,1,0],
+        [1,1,0],
+        [1,0,0]
     ]
 ];
 
@@ -213,11 +217,18 @@ function rotate() {
     for (let col = 0; col <= brick.item[0].length - 1; col++) {
         let tmp = []
         for (let row = brick.item.length - 1; row >= 0; row--) {
-            tmp.push(brick.item[row][col]);
+            let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
+            let dot = document.getElementById(id);
 
+            if (dot !== null) {
+                if (dot.isMarked) {
+                    return;
+                }
+            }
+
+            tmp.push(brick.item[row][col]);
         }
         newItem.push(tmp);
-
     }
     brick.item = [...newItem];
 }
