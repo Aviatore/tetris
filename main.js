@@ -2,11 +2,12 @@ var container;
 var container;
 var width = 20;
 var height = 20;
-var xElements = 15;
+var xElements = 8;
 var yElements = 15;
 var brickMargin = (30 * width) / 200;
 var marginTop = (-5 * width) / 200;
 var outline = (20 * width) / 200;
+var loop;
 // container = document.getElementById('container');
 
 
@@ -243,6 +244,7 @@ function switchDot(dot, x) {
         dot.style.outlineColor = '#000';
         dot.isMarkedB = true;
     }
+
 }
 
 function toggleDot(dot) {
@@ -255,10 +257,15 @@ function toggleDot(dot) {
     }
 }
 
-function switchOff(dot) {
-    if (dot.isMarkedB) {
+function switchOffB(dot, x) {
+    if (x === 'off') {
         dot.style.backgroundColor = '#879571';
         dot.style.outlineColor = '#879571';
+        dot.isMarked = false;
+    } else if (x === 'on') {
+        dot.style.backgroundColor = '#000';
+        dot.style.outlineColor = '#000';
+        dot.isMarked = true;
     }
 }
 
@@ -315,11 +322,85 @@ function clear() {
     }
 }
 
-function loop() {
-    if (!detectColission('ArrowDown')) {
-        move('ArrowDown')
-        drawBrick('ArrowDown');
+function isLineFull() {
+    let rows = [];
+
+    for (let row = 0; row < yElements + 1; row++) {
+        let counts = 0;
+
+        for (let col = 0; col < xElements + 1; col++) {
+            let id = `${col}:${row}`;
+            let dot = document.getElementById(id);
+
+            if (dot.isMarked) {counts++}
+        }
+
+        if (counts == xElements + 1) {
+            rows.push(row);
+        }
+    }
+
+    if (rows.length > 0) {
+        console.log(`row Ids: ${rows}`);
+        clearLines(rows);
+        // clearInterval(loop);
+        return [...[true, rows]];
+    }
+
+    return [...[false, rows]];
+}
+
+function clearLines(rows) {
+    console.log('squash');
+    for (let row of rows) {
+        for (let col = 0; col < xElements + 1; col++) {
+            let id = `${col}:${row}`;
+
+            let dot = document.getElementById(id);
+
+            switchOffB(dot, 'off');
+        }
     }
 }
 
-// setInterval(loop, 1000);
+function squash(rows) {
+    for (let row of rows) {
+        for (let rowIndex = row; rowIndex >= 0; rowIndex--) {
+            for (let col = 0; col < xElements + 1; col++) {
+                let idPrev = `${col}:${rowIndex - 1}`;
+                let id = `${col}:${rowIndex}`;
+                let dot = document.getElementById(id);
+                let dotPrev = document.getElementById(idPrev);
+
+                if (dotPrev !== null) {
+                    if (dotPrev.isMarked) {
+                        switchOffB(dot, 'on');
+                    } else {
+                        switchOffB(dot, 'off');
+                    }
+                } else {
+                    switchOffB(dot, 'off');
+                }
+                // debugger;
+            }
+        }
+    }
+}
+
+let squashed = false;
+let rows = [];
+function loop() {
+    if (squashed) {
+        squash(rows);
+        squashed = false;
+    } else {
+        if (!detectColission('ArrowDown')) {
+            move('ArrowDown')
+            drawBrick('ArrowDown');
+        }
+    }
+
+    [squashed, rows] = isLineFull();
+}
+
+// loop = setInterval(loop, 1000);
