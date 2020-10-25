@@ -34,6 +34,7 @@ function onLoad() {
             newDiv.style.display = 'inline-block';
             newDiv.id = `${column}:${row}`;
             newDiv.isMarked = false;
+            newDiv.isMarkedB = false;
 
             newRow.appendChild(newDiv);
         }
@@ -80,6 +81,23 @@ let brick = {
     }
 };
 
+function placeBrick() {
+    for (let row = 0; row < brick.item.length; row++) {
+        for (let col = 0; col < brick.item[0].length; col++) {
+            let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
+            let dot = document.getElementById(id);
+
+            if (dot !== null) {
+                if (dot.isMarkedB) {
+                    dot.isMarked = true;
+                }
+            }
+        }
+    }
+    brick.pos.x = 1;
+    brick.pos.y = 1;
+}
+
 function detectColission(direction) {
     for (let row = 0; row < brick.item.length; row++) {
         for (let col = 0; col < brick.item[0].length; col++) {
@@ -93,22 +111,40 @@ function detectColission(direction) {
             let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
             let dot = document.getElementById(id);
 
+            let nextId = `${brick.pos.x + col + xOffset}:${brick.pos.y + row + yOffset}`;
+            let nextDot = document.getElementById(nextId);
 
-            if (direction == 'ArrowLeft' && brick.pos.x + col === 0 && dot.isMarkedB) {
-                console.log(`1 ${dot.id}`);
-                return true;
-            } else if (direction == 'ArrowRight' && brick.pos.x + col === xElements + 0 && dot.isMarkedB) {
-                console.log(`2 col: ${col} row: ${row} posX: ${brick.pos.x} id: ${id}`);
-                return true;
-            } else if (direction == 'ArrowDown' && brick.pos.y + row === yElements + 0 && dot.isMarkedB) {
-                console.log(`3 ${dot.id}`);
-                return true;
-            } else if (dot !== null) {
-                if (dot.isMarked) {
-                    console.log(`4 ${dot.id}`);
-                    return true
+
+            if (direction == 'ArrowLeft' && dot != undefined) {
+                if ((brick.pos.x + col === 0 && dot.isMarkedB) ||
+                    (dot.isMarkedB && nextDot.isMarked)) {
+                    console.log(`1 ${dot.id}`);
+
+                    return true;
+                }
+            } else if (direction == 'ArrowRight' && dot != undefined) {
+                if ((brick.pos.x + col === xElements + 0 && dot.isMarkedB) ||
+                    (dot.isMarkedB && nextDot.isMarked)) {
+                    console.log(`2 col: ${col} row: ${row} posX: ${brick.pos.x} id: ${id}`);
+                    return true;
+                }
+            } else if (direction == 'ArrowDown' && dot != undefined) {
+                if ((brick.pos.y + row === yElements + 0 && dot.isMarkedB) ||
+                    (dot.isMarkedB && nextDot.isMarked)) {
+
+                    placeBrick();
+                    console.log(`3 ${dot.id} ${dot.isMarkedB} ${nextId}`);
+                    return true;
                 }
             }
+
+
+            // } else if (dot !== null) {
+            //     if (dot.isMarked) {
+            //         console.log(`4 ${dot.id}`);
+            //         return true
+            //     }
+            // }
         }
     }
 
@@ -116,11 +152,11 @@ function detectColission(direction) {
 }
 
 function move(direction) {
-    if (direction === 'ArrowLeft' && brick.pos.x > 0) {
+    if (direction === 'ArrowLeft' && brick.pos.x >= 0) {
         brick.pos.x--;
-    } else if (direction === 'ArrowRight' && brick.pos.x < xElements) {
+    } else if (direction === 'ArrowRight') {
         brick.pos.x++;
-    } else if (direction === 'ArrowDown' && brick.pos.y + brick.item.length < yElements + 1) {
+    } else if (direction === 'ArrowDown') {
         // console.log(brick.pos.y + brick.item.length);
         brick.pos.y++;
     }
@@ -177,11 +213,28 @@ function drawBrick(direction=null) {
     clear();
     for (let row = 0; row < brick.item.length; row++) {
         for (let col = 0; col < brick.item[0].length; col++) {
+            let xOffset;
+            let yOffset;
+
+            if (direction == 'ArrowLeft') {xOffset = -1}
+            else if (direction == 'ArrowRight') {xOffset = 1}
+            else if (direction == 'ArrowDown') {yOffset = 1}
+
             let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
             let dot = document.getElementById(id);
+
+            let nextId = `${brick.pos.x + col + xOffset}:${brick.pos.y + row + yOffset}`;
+            let nextDot = document.getElementById(nextId);
             // console.log(id);
+
+
             if (brick.item[row][col] === 0 && dot !== null) {
-                switchDot(dot, 'off');
+                if (nextDot !== null) {
+                    if (!nextDot.isMarked) {
+                        switchDot(dot, 'off');
+                    }
+                }
+
             } else if (brick.item[row][col] === 1 && dot !==null) {
                 switchDot(dot, 'on');
             }
@@ -194,6 +247,10 @@ function clear() {
         for (let col = 0; col < xElements + 1; col++) {
             let id = `${col}:${row}`;
             let dot = document.getElementById(id);
+
+            if (dot !== null) {
+                dot.isMarkedB = false;
+            }
 
             if (!dot.isMarked) {
                 switchDot(dot, 'off');
