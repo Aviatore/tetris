@@ -76,9 +76,10 @@ let bricks = [
         [1,1,0]
     ],
     [
-        [0,0,0],
+
         [0,1,0],
-        [1,1,1]
+        [1,1,1],
+        [0,0,0],
     ],
     [
         [1,1],
@@ -86,9 +87,9 @@ let bricks = [
     ],
     [
         [0,0,0,0],
+        [0,0,0,0],
         [1,1,1,1],
         [0,0,0,0],
-        [0,0,0,0]
     ],
     [
         [0,1,0],
@@ -100,7 +101,7 @@ let bricks = [
 function randomBrick() {
     let index = Math.floor(Math.random() * bricks.length);
     console.log(index);
-    return bricks[index];
+    return [...[index, bricks[index]]];
 }
 
 let brick = {
@@ -109,6 +110,8 @@ let brick = {
         [0,1,0],
         [1,1,0]
     ],
+    type: 0,
+    stage: 0,
     pos: {
         x: 1,
         y: 1
@@ -130,7 +133,10 @@ function placeBrick() {
     }
     brick.pos.x = 1;
     brick.pos.y = 1;
-    brick.item = randomBrick();
+    let index;
+    [index, brick.item] = randomBrick();
+    brick.type = index;
+    brick.stage = 0;
     // drawBrick();
 }
 
@@ -199,21 +205,8 @@ function move(direction) {
     // console.log(`x: ${brick.pos.x} y: ${brick.pos.y} len: ${brick.item.length}`);
 }
 
-function rotate() {
+function rotateRight() {
     let newItem = [];
-
-    // Solve the problem with brick rotation at the edge
-    if (brick.pos.x + brick.item[0].length - 1 > xElements) {
-        brick.pos.x = xElements - (brick.item[0].length - 1);
-    }
-
-    if (brick.pos.x < 0) {
-        brick.pos.x = 0;
-    }
-
-    if (brick.pos.y + brick.item.length - 1 > yElements) {
-        brick.pos.y = yElements - (brick.item.length - 1);
-    }
 
     for (let col = 0; col <= brick.item[0].length - 1; col++) {
         let tmp = []
@@ -232,6 +225,57 @@ function rotate() {
         newItem.push(tmp);
     }
     brick.item = [...newItem];
+}
+
+function rotateLeft() {
+    let newItem = [];
+
+    for (let col = brick.item[0].length - 1; col >= 0 ; col--) {
+        let tmp = [];
+        for (let row = 0; row <= brick.item.length - 1; row++) {
+            let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
+            let dot = document.getElementById(id);
+
+            if (dot !== null) {
+                if (dot.isMarked) {
+                    return;
+                }
+            }
+
+            tmp.push(brick.item[row][col]);
+        }
+        newItem.push(tmp);
+    }
+    brick.item = [...newItem];
+}
+
+function rotate() {
+    // Solve the problem with brick rotation at the edge
+    if (brick.pos.x + brick.item[0].length - 1 > xElements) {
+        brick.pos.x = xElements - (brick.item[0].length - 1);
+    }
+
+    if (brick.pos.x < 0) {
+        brick.pos.x = 0;
+    }
+
+    if (brick.pos.y + brick.item.length - 1 > yElements) {
+        brick.pos.y = yElements - (brick.item.length - 1);
+    }
+
+    if ([3, 4].includes(brick.type)) {
+        if (brick.stage === 0) {
+            console.log(`right, ${brick.type}`);
+            rotateRight();
+            brick.stage = 1;
+        } else {
+            console.log(`left, ${brick.type}`);
+            rotateLeft();
+            brick.stage = 0;
+        }
+    } else {
+        rotateRight();
+    }
 }
 
 function switchDot(dot, x) {
@@ -408,4 +452,4 @@ function loop() {
     if (!squashed) {drawBrick('ArrowDown');}
 }
 
-loop = setInterval(loop, 1000);
+// loop = setInterval(loop, 1000);
