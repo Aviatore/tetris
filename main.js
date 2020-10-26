@@ -131,7 +131,7 @@ function placeBrick() {
     brick.pos.x = 1;
     brick.pos.y = 1;
     brick.item = randomBrick();
-    drawBrick();
+    // drawBrick();
 }
 
 function detectColission(direction) {
@@ -393,14 +393,19 @@ function loop() {
     if (squashed) {
         squash(rows);
         squashed = false;
+        return;
     } else {
         if (!detectColission('ArrowDown')) {
             move('ArrowDown')
             drawBrick('ArrowDown');
         }
+
     }
+    // debugger;
 
     [squashed, rows] = isLineFull();
+
+    if (!squashed) {drawBrick('ArrowDown');}
 }
 
-// loop = setInterval(loop, 1000);
+loop = setInterval(loop, 1000);
