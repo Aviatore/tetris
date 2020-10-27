@@ -9,7 +9,9 @@ var marginTop = (-5 * width) / 200;
 var outline = (20 * width) / 200;
 var loop;
 // container = document.getElementById('container');
-
+var lock = false;
+let squashed = false;
+let rows = [];
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -60,12 +62,18 @@ function onLoad() {
             //     break;
         }
 
-        if (!detectColission(e.key)) {
-            move(e.key)
-            drawBrick(e.key);
+        if (!detectColission(e.key) && !lock) {
+            // lock = true;
+            // move(e.key)
+            // drawBrick(e.key);
+            loops(e.key);
         }
         // drawBrick(e.key);
 
+    })
+
+    document.addEventListener('keyup', e => {
+        lock = false;
     })
 }
 
@@ -176,6 +184,9 @@ function detectColission(direction) {
 
                     placeBrick();
                     console.log(`3 ${dot.id} ${dot.isMarkedB} ${nextId}`);
+
+                    [squashed, rows] = isLineFull();
+
                     return true;
                 }
             }
@@ -317,6 +328,9 @@ function switchOffB(dot, x) {
 
 function drawBrick(direction=null) {
     clear();
+
+    // debugger;
+
     for (let row = 0; row < brick.item.length; row++) {
         for (let col = 0; col < brick.item[0].length; col++) {
             let xOffset;
@@ -367,6 +381,7 @@ function clear() {
 }
 
 function isLineFull() {
+
     let rows = [];
 
     for (let row = 0; row < yElements + 1; row++) {
@@ -385,6 +400,7 @@ function isLineFull() {
     }
 
     if (rows.length > 0) {
+        lock = true;
         console.log(`row Ids: ${rows}`);
         clearLines(rows);
         // clearInterval(loop);
@@ -431,25 +447,29 @@ function squash(rows) {
     }
 }
 
-let squashed = false;
-let rows = [];
-function loop() {
+function loops(direction = null) {
     if (squashed) {
         squash(rows);
         squashed = false;
         return;
-    } else {
-        if (!detectColission('ArrowDown')) {
-            move('ArrowDown')
-            drawBrick('ArrowDown');
-        }
-
     }
-    // debugger;
 
-    [squashed, rows] = isLineFull();
-
-    if (!squashed) {drawBrick('ArrowDown');}
+    if (direction !=null && !lock) {
+        move(direction)
+        drawBrick(direction);
+    }
+    else {
+        if (squashed) {
+            squash(rows);
+            squashed = false;
+            return;
+        } else {
+            if (!detectColission('ArrowDown')) {
+                move('ArrowDown')
+                drawBrick('ArrowDown');
+            }
+        }
+    }
 }
 
-// loop = setInterval(loop, 1000);
+loop = setInterval(loops, 1000);
