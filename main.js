@@ -10,6 +10,8 @@ var outline = (20 * width) / 200;
 var loop;
 // container = document.getElementById('container');
 var lock = false;
+let squashed = false;
+let rows = [];
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -182,6 +184,9 @@ function detectColission(direction) {
 
                     placeBrick();
                     console.log(`3 ${dot.id} ${dot.isMarkedB} ${nextId}`);
+
+                    [squashed, rows] = isLineFull();
+
                     return true;
                 }
             }
@@ -323,6 +328,9 @@ function switchOffB(dot, x) {
 
 function drawBrick(direction=null) {
     clear();
+
+    // debugger;
+
     for (let row = 0; row < brick.item.length; row++) {
         for (let col = 0; col < brick.item[0].length; col++) {
             let xOffset;
@@ -439,66 +447,29 @@ function squash(rows) {
     }
 }
 
-let squashed = false;
-let rows = [];
-let ppp = false;
 function loops(direction = null) {
-    if (ppp) {
-        ppp = false;
-        // lock = false;
-    }
     if (squashed) {
         squash(rows);
         squashed = false;
-        ppp = true;
         return;
     }
 
     if (direction !=null && !lock) {
-        // lock = true;
         move(direction)
         drawBrick(direction);
-
-        // if (ppp) {
-        //     ppp = false;
-        //     lock = false;
-        // }
-        // if (squashed) {
-        //     squash(rows);
-        //     squashed = false;
-        //     ppp = true;
-        //     return;
-        // }
-
-    } else {
-        if (ppp) {
-            ppp = false;
-            // lock = false;
-        }
+    }
+    else {
         if (squashed) {
             squash(rows);
             squashed = false;
-            ppp = true;
             return;
         } else {
             if (!detectColission('ArrowDown')) {
-                // lock = true;
                 move('ArrowDown')
                 drawBrick('ArrowDown');
-                // lock = false;
             }
-
         }
     }
-
-
-    // debugger;
-
-    [squashed, rows] = isLineFull();
-
-    // if (!squashed && !lock) {
-    //     drawBrick('ArrowDown');
-    // }
 }
 
 loop = setInterval(loops, 1000);
