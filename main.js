@@ -126,6 +126,12 @@ let brick = {
     }
 };
 
+
+// function gameOverClearScreen(rowLen, colLen, rowDir, colDir) {
+//     if (rowDir == 'up')
+// }
+
+
 function placeBrick() {
     for (let row = 0; row < brick.item.length; row++) {
         for (let col = 0; col < brick.item[0].length; col++) {
@@ -140,7 +146,7 @@ function placeBrick() {
         }
     }
 
-    if (brick.pos.y === 0) {
+    if (brick.pos.y < 0) {
         console.log('Game over!');
         drawBrick();
         clearInterval(loop);
