@@ -8,6 +8,7 @@ var brickMargin = (30 * width) / 200;
 var marginTop = (-5 * width) / 200;
 var outline = (20 * width) / 200;
 var loop;
+var gameOverLoop;
 // container = document.getElementById('container');
 var lock = false;
 let squashed = false;
@@ -75,6 +76,8 @@ function onLoad() {
     document.addEventListener('keyup', e => {
         lock = false;
     })
+
+    // gameOverClearScreen();
 }
 
 let bricks = [
@@ -126,9 +129,65 @@ let brick = {
     }
 };
 
-
-// function gameOverClearScreen(rowLen, colLen, rowDir, colDir) {
-//     if (rowDir == 'up')
+// var rowLen = yElements;
+// var colLen = xElements;
+// var deepness;
+// var dir = 'up';
+//
+// function drawLine(f, dot) {
+//     return new Promise(resolve => {
+//         setTimeout(function() {
+//             // console.log(dot.id);
+//             resolve(f(dot, 'on'));
+//         }, 1000)
+//     });
+// }
+//
+// async function gameOverClearScreen() {
+//     deepness = xElements - colLen;
+//     let dot;
+//
+//     if (dir == 'up') {
+//         for (let row = rowLen; row >= deepness; row--) {
+//             let id = `0:${row}`;
+//             dot = document.getElementById(id);
+//             // if (dot == null) {console.log(`${id} is null`)} else {console.log(id)}
+//
+//             await drawLine(switchDot, dot);
+//         }
+//         dir = 'right';
+//         gameOverClearScreen()
+//     } else if (dir == 'down') {
+//         for (let row = deepness; row < rowLen; row++) {
+//             let id = `${colLen - 1}:${row}`;
+//             dot = document.getElementById(id);
+//             await drawLine(switchDot, dot);
+//
+//             rowLen--;
+//             colLen--;
+//         }
+//         dir = 'left';
+//         gameOverClearScreen()
+//     } else if (dir == 'left') {
+//         for (let col = colLen - 1; col >= 0; col--) {
+//             let id = `${col}:${rowLen - 1}`;
+//             dot = document.getElementById(id);
+//             await drawLine(switchDot, dot);
+//         }
+//         dir = 'up';
+//         gameOverClearScreen()
+//     } else if (dir == 'right') {
+//         for (let col = deepness; col < colLen - 1; col++) {
+//             let id = `${col}:${deepness}`;
+//             // console.log(id);
+//             dot = document.getElementById(id);
+//             await drawLine(switchDot, dot);
+//         }
+//         dir = 'down';
+//         gameOverClearScreen()
+//     }
+//
+//
 // }
 
 
@@ -488,3 +547,5 @@ function loops(direction = null) {
 }
 
 loop = setInterval(loops, 1000);
+// gameOverClearScreen();
+// gameOverLoop = setInterval(gameOverClearScreen, 1000);
