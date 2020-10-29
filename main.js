@@ -1,12 +1,12 @@
 var container;
 var container;
-var width = 20;
-var height = 20;
+var width = 14;
+var height = 14;
 var xElements = 9;
 var yElements = 19;
 var brickMargin = (30 * width) / 200;
-var marginTop = (-5 * width) / 200;
-var outline = (20 * width) / 200;
+var marginTop = (-30 * width) / 200;
+var outline = (28 * width) / 200;
 var loop;
 var gameOverLoop;
 // container = document.getElementById('container');
@@ -94,7 +94,7 @@ function onLoad() {
     let headings = scoreDiv.querySelectorAll('h1')
     for (let i = 0; i < headings.length; i++    ) {
         headings[i].style.fontFamily = 'auto digital';
-        headings[i].style.fontSize = '27px';
+        headings[i].style.fontSize = '18px';
     }
     scoreDiv.style.textAlign = 'center'
     // scoreDiv.style.border = `${outline}px solid #9aa680`;
@@ -102,7 +102,7 @@ function onLoad() {
     // scoreDiv.style.height = '69.15%';
     // scoreDiv.style.right = '48%';
     // scoreDiv.style.top = '1.3%';
-    scoreDiv.style.backgroundColor = '#879571';
+    scoreDiv.style.backgroundColor = '#9aa680';
 
     // gameOverClearScreen();
 }
@@ -573,6 +573,6 @@ function loops(direction = null) {
     }
 }
 
-// loop = setInterval(loops, 1000);
+loop = setInterval(loops, 1000);
 // gameOverClearScreen();
 // gameOverLoop = setInterval(gameOverClearScreen, 1000);

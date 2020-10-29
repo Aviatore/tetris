@@ -1,19 +1,23 @@
+body {
+    overflow: hidden;
+}
 #body {
     position: absolute;
 
     height: 100%;
     width: 100%;
+
 }
 #gamepad {
     position: absolute;
-    border: 1px solid red;
+    /*border: 1px solid red;*/
     background-image: url("pics/gamepad.png");
     background-repeat: no-repeat;
     background-size: contain;
-    height: 95vh;
-    width: 500px;
+    height: 890px;
+    width: 502px;
     margin: auto;
-    z-index: 5;
+    z-index: 1;
     left: 50%;
     box-sizing: border-box;
     transform: translateX(-50%);
@@ -26,16 +30,29 @@
     border: 1px solid black;
     background-color: #9aa680;
     padding: 5px;
-    
+
+}
+#bcg {
+    position: absolute;
+    height: 890px;
+    width: 502px;
+    margin: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #9aa680;
 }
 #score-panel {
     display: inline-block;
     position: absolute;
-    height: 100%;
+    width: 120px;
+    top: 70px;
+    transform: translateX(50px);
+
 }
 .outerContainer {
     width: 400px;
-    border: 1px solid black;
+
     margin: auto;
+
 
 }
