@@ -2,8 +2,8 @@ var container;
 var container;
 var width = 20;
 var height = 20;
-var xElements = 8;
-var yElements = 15;
+var xElements = 9;
+var yElements = 19;
 var brickMargin = (30 * width) / 200;
 var marginTop = (-5 * width) / 200;
 var outline = (20 * width) / 200;
@@ -76,6 +76,33 @@ function onLoad() {
     document.addEventListener('keyup', e => {
         lock = false;
     })
+
+
+    let scoreDiv = document.getElementById('score-panel');
+    let currentScore = 999
+    scoreDiv.innerHTML = `
+       <h1 id="score-title">SCORE</h1>
+       <h1 id="current-score">999</h1>
+       <h1 id="high-score-title">HI-SCORE</h1>
+       <h1 id="high-score">99999</h1>
+<!--       <h1 id="placeholder">PLACEHOLDER FOR BRICK PREVIEW</h1>-->
+       <h1 id="speed-title">SPEED</h1>
+       <h1 id="speed">0</h1>
+       <h1 id="level-title">LEVEL</h1>
+       <h1 id="level">0</h1>
+       <h1 id="speaker">&#128264;</h1>`;
+    let headings = scoreDiv.querySelectorAll('h1')
+    for (let i = 0; i < headings.length; i++    ) {
+        headings[i].style.fontFamily = 'auto digital';
+        headings[i].style.fontSize = '27px';
+    }
+    scoreDiv.style.textAlign = 'center'
+    // scoreDiv.style.border = `${outline}px solid #9aa680`;
+    // scoreDiv.style.width = '20%';
+    // scoreDiv.style.height = '69.15%';
+    // scoreDiv.style.right = '48%';
+    // scoreDiv.style.top = '1.3%';
+    scoreDiv.style.backgroundColor = '#879571';
 
     // gameOverClearScreen();
 }
@@ -546,6 +573,6 @@ function loops(direction = null) {
     }
 }
 
-loop = setInterval(loops, 1000);
+// loop = setInterval(loops, 1000);
 // gameOverClearScreen();
 // gameOverLoop = setInterval(gameOverClearScreen, 1000);
