@@ -121,8 +121,8 @@ let brick = {
     type: 0,
     stage: 0,
     pos: {
-        x: 1,
-        y: 1
+        x: 4,
+        y: -3
     }
 };
 
@@ -139,12 +139,19 @@ function placeBrick() {
             }
         }
     }
-    brick.pos.x = 1;
-    brick.pos.y = 1;
+
+    if (brick.pos.y === 0) {
+        console.log('Game over!');
+        drawBrick();
+        clearInterval(loop);
+    }
+
     let index;
     [index, brick.item] = randomBrick();
     brick.type = index;
     brick.stage = 0;
+    brick.pos.x = 4;
+    brick.pos.y = brick.item.length * -1;
     // drawBrick();
 }
 
@@ -186,6 +193,8 @@ function detectColission(direction) {
                     console.log(`3 ${dot.id} ${dot.isMarkedB} ${nextId}`);
 
                     [squashed, rows] = isLineFull();
+
+
 
                     return true;
                 }
