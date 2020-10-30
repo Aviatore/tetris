@@ -17,11 +17,13 @@ let pointsPerLine = 100;
 let pointsMultiplicate = 0.5;
 const placeholderXElements = 3;
 const placeholderYElements = 3;
+const dotMainBoardPrefix = 'M';
+const dotPlaceholderBoardPrefix = 'P';
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
 
-function fillDots(container, rowLen, colLen) {
+function fillDots(container, rowLen, colLen, prefix) {
     for (let row=0; row <= rowLen; row++) {
         let newRow = document.createElement('DIV');
 
@@ -39,7 +41,7 @@ function fillDots(container, rowLen, colLen) {
             newDiv.style.lineHeight = '0';
 
             newDiv.style.display = 'inline-block';
-            newDiv.id = `${column}:${row}`;
+            newDiv.id = `${prefix}:${column}:${row}`;
             newDiv.isMarked = false;
             newDiv.isMarkedB = false;
 
@@ -54,7 +56,7 @@ function fillDots(container, rowLen, colLen) {
 function onLoad() {
     container = document.getElementById('container');
 
-    fillDots(container, yElements, xElements);
+    fillDots(container, yElements, xElements, dotMainBoardPrefix);
 
     drawBrick();
     document.addEventListener('keydown', e => {
@@ -118,8 +120,12 @@ function onLoad() {
     placeholder.style.display = "inline-block";
     placeholder.style.padding = "8px 2px 2px 2px";
 
-    fillDots(placeholder, placeholderYElements, placeholderXElements);
+    fillDots(placeholder, placeholderYElements, placeholderXElements, dotPlaceholderBoardPrefix);
 
+    // Generate next random brick
+    [brick.next.type, brick.next.item] = randomBrick();
+
+    drawBrickPlaceHolder();
     // gameOverClearScreen();
 
 
@@ -166,6 +172,10 @@ let brick = {
         [0,1,0],
         [1,1,0]
     ],
+    next: {
+        item: [],
+        type: null,
+    },
     type: 0,
     stage: 0,
     pos: {
@@ -239,7 +249,7 @@ let brick = {
 function placeBrick() {
     for (let row = 0; row < brick.item.length; row++) {
         for (let col = 0; col < brick.item[0].length; col++) {
-            let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
+            let id = `${dotMainBoardPrefix}:${brick.pos.x + col}:${brick.pos.y + row}`;
             let dot = document.getElementById(id);
 
             if (dot !== null) {
@@ -256,13 +266,17 @@ function placeBrick() {
         clearInterval(loop);
     }
 
-    let index;
-    [index, brick.item] = randomBrick();
-    brick.type = index;
+    // Update current brick
+    brick.type = brick.next.type;
+    brick.item = [...brick.next.item];
     brick.stage = 0;
     brick.pos.x = 4;
     brick.pos.y = brick.item.length * -1;
     // drawBrick();
+
+    // Generate next random brick
+    [brick.next.type, brick.next.item] = randomBrick();
+    drawBrickPlaceHolder();
 }
 
 function detectColission(direction) {
@@ -275,10 +289,10 @@ function detectColission(direction) {
             else if (direction == 'ArrowRight') {xOffset = 1}
             else if (direction == 'ArrowDown') {yOffset = 1}
 
-            let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
+            let id = `${dotMainBoardPrefix}:${brick.pos.x + col}:${brick.pos.y + row}`;
             let dot = document.getElementById(id);
 
-            let nextId = `${brick.pos.x + col + xOffset}:${brick.pos.y + row + yOffset}`;
+            let nextId = `${dotMainBoardPrefix}:${brick.pos.x + col + xOffset}:${brick.pos.y + row + yOffset}`;
             let nextDot = document.getElementById(nextId);
 
 
@@ -341,7 +355,7 @@ function rotateRight() {
     for (let col = 0; col <= brick.item[0].length - 1; col++) {
         let tmp = []
         for (let row = brick.item.length - 1; row >= 0; row--) {
-            let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
+            let id = `${dotMainBoardPrefix}:${brick.pos.x + col}:${brick.pos.y + row}`;
             let dot = document.getElementById(id);
 
             if (dot !== null) {
@@ -363,7 +377,7 @@ function rotateLeft() {
     for (let col = brick.item[0].length - 1; col >= 0 ; col--) {
         let tmp = [];
         for (let row = 0; row <= brick.item.length - 1; row++) {
-            let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
+            let id = `${dotMainBoardPrefix}:${brick.pos.x + col}:${brick.pos.y + row}`;
             let dot = document.getElementById(id);
 
             if (dot !== null) {
@@ -459,10 +473,10 @@ function drawBrick(direction=null) {
             else if (direction == 'ArrowRight') {xOffset = 1}
             else if (direction == 'ArrowDown') {yOffset = 1}
 
-            let id = `${brick.pos.x + col}:${brick.pos.y + row}`;
+            let id = `${dotMainBoardPrefix}:${brick.pos.x + col}:${brick.pos.y + row}`;
             let dot = document.getElementById(id);
 
-            let nextId = `${brick.pos.x + col + xOffset}:${brick.pos.y + row + yOffset}`;
+            let nextId = `${dotMainBoardPrefix}:${brick.pos.x + col + xOffset}:${brick.pos.y + row + yOffset}`;
             let nextDot = document.getElementById(nextId);
             // console.log(id);
 
@@ -481,10 +495,28 @@ function drawBrick(direction=null) {
     }
 }
 
+function drawBrickPlaceHolder() {
+    clearPlaceHolder();
+
+    for (let row = 0; row < brick.next.item.length; row++) {
+        for (let col = 0; col < brick.next.item[0].length; col++) {
+            let id = `${dotPlaceholderBoardPrefix}:${col}:${row}`;
+            console.log(id);
+            let dot = document.getElementById(id);
+
+            if (brick.next.item[row][col] === 0) {
+                switchDot(dot, 'off');
+            } else if (brick.next.item[row][col] === 1) {
+                switchDot(dot, 'on');
+            }
+        }
+    }
+}
+
 function clear() {
     for (let row = 0; row < yElements + 1; row++) {
         for (let col = 0; col < xElements + 1; col++) {
-            let id = `${col}:${row}`;
+            let id = `${dotMainBoardPrefix}:${col}:${row}`;
             let dot = document.getElementById(id);
 
             if (dot !== null) {
@@ -499,6 +531,17 @@ function clear() {
     }
 }
 
+function clearPlaceHolder() {
+    for (let row = 0; row < placeholderYElements + 1; row++) {
+        for (let col = 0; col < placeholderXElements + 1; col++) {
+            let id = `${dotPlaceholderBoardPrefix}:${col}:${row}`;
+            let dot = document.getElementById(id);
+
+            switchDot(dot, 'off');
+        }
+    }
+}
+
 function isLineFull() {
 
     let rows = [];
@@ -507,7 +550,7 @@ function isLineFull() {
         let counts = 0;
 
         for (let col = 0; col < xElements + 1; col++) {
-            let id = `${col}:${row}`;
+            let id = `${dotMainBoardPrefix}:${col}:${row}`;
             let dot = document.getElementById(id);
 
             if (dot.isMarked) {counts++}
@@ -536,7 +579,7 @@ function clearLines(rows) {
     for (let row of rows) {
 
         for (let col = 0; col < xElements + 1; col++) {
-            let id = `${col}:${row}`;
+            let id = `${dotMainBoardPrefix}:${col}:${row}`;
 
             let dot = document.getElementById(id);
 
@@ -553,7 +596,7 @@ function squash(rows) {
         for (let rowIndex = row; rowIndex >= 0; rowIndex--) {
             for (let col = 0; col < xElements + 1; col++) {
                 let idPrev = `${col}:${rowIndex - 1}`;
-                let id = `${col}:${rowIndex}`;
+                let id = `${dotMainBoardPrefix}:${col}:${rowIndex}`;
                 let dot = document.getElementById(id);
                 let dotPrev = document.getElementById(idPrev);
 
