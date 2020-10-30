@@ -13,6 +13,8 @@ var gameOverLoop;
 var lock = false;
 let squashed = false;
 let rows = [];
+let pointsPerLine = 100;
+let pointsMultiplicate = 0.5;
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -82,7 +84,7 @@ function onLoad() {
     let currentScore = 999
     scoreDiv.innerHTML = `
        <h1 id="score-title">SCORE</h1>
-       <h1 id="current-score">999</h1>
+       <h1 id="current-score">0</h1>
        <h1 id="high-score-title">HI-SCORE</h1>
        <h1 id="high-score">99999</h1>
 <!--       <h1 id="placeholder">PLACEHOLDER FOR BRICK PREVIEW</h1>-->
@@ -513,7 +515,10 @@ function isLineFull() {
 
 function clearLines(rows) {
     console.log('squash');
+    let score = document.getElementById("current-score");
+    let rowNum = 1;
     for (let row of rows) {
+
         for (let col = 0; col < xElements + 1; col++) {
             let id = `${col}:${row}`;
 
@@ -521,6 +526,9 @@ function clearLines(rows) {
 
             switchOffB(dot, 'off');
         }
+
+        score.innerText = Number(score.innerText) + (rowNum * pointsPerLine);
+        rowNum += pointsMultiplicate;
     }
 }
 
@@ -573,6 +581,6 @@ function loops(direction = null) {
     }
 }
 
-loop = setInterval(loops, 1000);
+// loop = setInterval(loops, 1000);
 // gameOverClearScreen();
 // gameOverLoop = setInterval(gameOverClearScreen, 1000);
