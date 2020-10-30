@@ -15,16 +15,17 @@ let squashed = false;
 let rows = [];
 let pointsPerLine = 100;
 let pointsMultiplicate = 0.5;
+const placeholderXElements = 3;
+const placeholderYElements = 3;
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
-function onLoad() {
-    container = document.getElementById('container');
 
-    for (let row=0; row <= yElements; row++) {
+function fillDots(container, rowLen, colLen) {
+    for (let row=0; row <= rowLen; row++) {
         let newRow = document.createElement('DIV');
 
-        for (let column=0; column <= xElements; column++) {
+        for (let column=0; column <= colLen; column++) {
             let newDiv = document.createElement('DIV');
             newDiv.style.border = `${outline}px solid #9aa680`;
             newDiv.style.backgroundColor = '#879571';
@@ -47,6 +48,13 @@ function onLoad() {
 
         container.appendChild(newRow);
     }
+}
+
+
+function onLoad() {
+    container = document.getElementById('container');
+
+    fillDots(container, yElements, xElements);
 
     drawBrick();
     document.addEventListener('keydown', e => {
@@ -87,7 +95,7 @@ function onLoad() {
        <h1 id="current-score">0</h1>
        <h1 id="high-score-title">HI-SCORE</h1>
        <h1 id="high-score">99999</h1>
-<!--       <h1 id="placeholder">PLACEHOLDER FOR BRICK PREVIEW</h1>-->
+       <div id="placeholder"></div>
        <h1 id="speed-title">SPEED</h1>
        <h1 id="speed">0</h1>
        <h1 id="level-title">LEVEL</h1>
@@ -106,7 +114,15 @@ function onLoad() {
     // scoreDiv.style.top = '1.3%';
     scoreDiv.style.backgroundColor = '#9aa680';
 
+    let placeholder = document.getElementById('placeholder');
+    placeholder.style.display = "inline-block";
+    placeholder.style.padding = "8px 2px 2px 2px";
+
+    fillDots(placeholder, placeholderYElements, placeholderXElements);
+
     // gameOverClearScreen();
+
+
 }
 
 let bricks = [
