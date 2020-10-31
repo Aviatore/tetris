@@ -96,7 +96,7 @@ function onLoad() {
        <h1 id="score-title">SCORE</h1>
        <h1 id="current-score">0</h1>
        <h1 id="high-score-title">HI-SCORE</h1>
-       <h1 id="high-score">99999</h1>
+       <h1 id="high-score">0</h1>
        <div id="placeholder"></div>
        <h1 id="speed-title">SPEED</h1>
        <h1 id="speed">0</h1>
