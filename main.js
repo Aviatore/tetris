@@ -595,7 +595,7 @@ function squash(rows) {
     for (let row of rows) {
         for (let rowIndex = row; rowIndex >= 0; rowIndex--) {
             for (let col = 0; col < xElements + 1; col++) {
-                let idPrev = `${col}:${rowIndex - 1}`;
+                let idPrev = `${dotMainBoardPrefix}:${col}:${rowIndex - 1}`;
                 let id = `${dotMainBoardPrefix}:${col}:${rowIndex}`;
                 let dot = document.getElementById(id);
                 let dotPrev = document.getElementById(idPrev);
