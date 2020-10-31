@@ -124,11 +124,20 @@ function onLoad() {
 
     // Generate next random brick
     [brick.next.type, brick.next.item] = randomBrick();
+    randomRotation();
 
     drawBrickPlaceHolder();
     // gameOverClearScreen();
 
 
+}
+
+function randomRotation() {
+    let numberOfTimes = Math.floor(Math.random() * 4);
+
+    for (let time = 0; time < numberOfTimes; time++) {
+        rotateRight('placeholder');
+    }
 }
 
 let bricks = [
@@ -276,6 +285,7 @@ function placeBrick() {
 
     // Generate next random brick
     [brick.next.type, brick.next.item] = randomBrick();
+    randomRotation();
     drawBrickPlaceHolder();
 }
 
@@ -349,13 +359,27 @@ function move(direction) {
     // console.log(`x: ${brick.pos.x} y: ${brick.pos.y} len: ${brick.item.length}`);
 }
 
-function rotateRight() {
+function rotateRight(brickType) {
     let newItem = [];
+    let prefix;
+    let brickItem;
+    let brickPos;
 
-    for (let col = 0; col <= brick.item[0].length - 1; col++) {
+    if (brickType == 'main') {
+        prefix = dotMainBoardPrefix;
+        brickItem = brick.item;
+        brickPos = brick.pos;
+    } else if (brickType == 'placeholder') {
+        prefix = dotPlaceholderBoardPrefix;
+        brickItem = brick.next.item;
+        brickPos = {x: 0, y: 0};
+    }
+
+
+    for (let col = 0; col <= brickItem[0].length - 1; col++) {
         let tmp = []
-        for (let row = brick.item.length - 1; row >= 0; row--) {
-            let id = `${dotMainBoardPrefix}:${brick.pos.x + col}:${brick.pos.y + row}`;
+        for (let row = brickItem.length - 1; row >= 0; row--) {
+            let id = `${prefix}:${brickPos.x + col}:${brickPos.y + row}`;
             let dot = document.getElementById(id);
 
             if (dot !== null) {
@@ -364,11 +388,17 @@ function rotateRight() {
                 }
             }
 
-            tmp.push(brick.item[row][col]);
+            tmp.push(brickItem[row][col]);
         }
         newItem.push(tmp);
     }
-    brick.item = [...newItem];
+
+    if (brickType == 'main') {
+        brick.item = [...newItem];
+    } else if (brickType == 'placeholder') {
+        brick.next.item = [...newItem];
+    }
+
 }
 
 function rotateLeft() {
@@ -410,7 +440,7 @@ function rotate() {
     if ([3, 4].includes(brick.type)) {
         if (brick.stage === 0) {
             console.log(`right, ${brick.type}`);
-            rotateRight();
+            rotateRight('main');
             brick.stage = 1;
         } else {
             console.log(`left, ${brick.type}`);
@@ -418,8 +448,10 @@ function rotate() {
             brick.stage = 0;
         }
     } else {
-        rotateRight();
+        rotateRight('main');
     }
+
+    console.log(`brick index: ${brick.type}`);
 }
 
 function switchDot(dot, x) {
