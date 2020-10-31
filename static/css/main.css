@@ -11,7 +11,7 @@ body {
 #gamepad {
     position: absolute;
     /*border: 1px solid red;*/
-    background-image: url("pics/gamepad.png");
+    background-image: url("/static/pics/gamepad.png");
     background-repeat: no-repeat;
     background-size: contain;
     height: 890px;

@@ -1,8 +1,13 @@
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, render_template, send_from_directory
 from database import db, queries
 import json
 
 app = Flask(__name__)
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
 @app.route('/highscore/<int:highscore>')
