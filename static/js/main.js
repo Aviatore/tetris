@@ -196,29 +196,43 @@ let brick = {
 };
 
 // ----- ANIMATED CLEAR SCREEN -----
-var rowLen = yElements;
-var colLen = xElements;
+var rowLen;
+var colLen;
 var deepness = 0;
-var dir = 'up';
+var dir;
 
-function drawLine(f, dot) {
+function drawLine(f, dot, mode) {
     return new Promise(resolve => {
         setTimeout(function() {
             // console.log(dot.id);
-            resolve(f(dot, 'on'));
-        }, 500)
+            resolve(f(dot, mode));
+        }, 10)
     });
 }
 
 async function clearScreenController() {
+    rowLen = yElements;
+    colLen = xElements;
+    deepness = 0;
+    dir = 'up';
+
     keyPadLock = true;
     while (deepness < 5) {
-        await gameOverClearScreen();
+        await gameOverClearScreen('on');
+    }
+
+    rowLen = yElements;
+    colLen = xElements;
+    dir = 'up';
+    deepness = 0;
+
+    while (deepness < 5) {
+        await gameOverClearScreen('off');
     }
     keyPadLock = false;
 }
 
-async function gameOverClearScreen() {
+async function gameOverClearScreen(mode) {
     deepness = xElements - colLen;
     console.log(`deepness: ${deepness}`);
     let dot;
@@ -229,8 +243,10 @@ async function gameOverClearScreen() {
             dot = document.getElementById(id);
             if (dot == null) {console.log(`${id} is null`)} else {console.log(id)}
 
-            if (!dot.isMarked) {
-                await drawLine(switchOffB, dot);
+            if (!dot.isMarked && mode == 'on') {
+                await drawLine(switchOffB, dot, mode);
+            } else if (mode == 'off') {
+                await drawLine(switchOffB, dot, mode);
             }
         }
         dir = 'right';
@@ -239,8 +255,10 @@ async function gameOverClearScreen() {
             let id = `${dotMainBoardPrefix}:${colLen}:${row}`;
             dot = document.getElementById(id);
 
-            if (!dot.isMarked) {
-                await drawLine(switchOffB, dot);
+            if (!dot.isMarked && mode == 'on') {
+                await drawLine(switchOffB, dot, mode);
+            } else if (mode == 'off') {
+                await drawLine(switchOffB, dot, mode);
             }
         }
         rowLen--;
@@ -251,8 +269,10 @@ async function gameOverClearScreen() {
             let id = `${dotMainBoardPrefix}:${col}:${rowLen + 1}`;
             dot = document.getElementById(id);
 
-            if (!dot.isMarked) {
-                await drawLine(switchOffB, dot);
+            if (!dot.isMarked && mode == 'on') {
+                await drawLine(switchOffB, dot, mode);
+            } else if (mode == 'off') {
+                await drawLine(switchOffB, dot, mode);
             }
         }
         dir = 'up';
@@ -262,8 +282,10 @@ async function gameOverClearScreen() {
             // console.log(id);
             dot = document.getElementById(id);
 
-            if (!dot.isMarked) {
-                await drawLine(switchOffB, dot);
+            if (!dot.isMarked && mode == 'on') {
+                await drawLine(switchOffB, dot, mode);
+            } else if (mode == 'off') {
+                await drawLine(switchOffB, dot, mode);
             }
         }
         dir = 'down';
