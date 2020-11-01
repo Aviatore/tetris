@@ -128,7 +128,7 @@ function onLoad() {
 
     drawBrickPlaceHolder();
     // gameOverClearScreen();
-
+    clearScreenController();
 
 }
 
@@ -193,66 +193,68 @@ let brick = {
     }
 };
 
-// var rowLen = yElements;
-// var colLen = xElements;
-// var deepness;
-// var dir = 'up';
-//
-// function drawLine(f, dot) {
-//     return new Promise(resolve => {
-//         setTimeout(function() {
-//             // console.log(dot.id);
-//             resolve(f(dot, 'on'));
-//         }, 1000)
-//     });
-// }
-//
-// async function gameOverClearScreen() {
-//     deepness = xElements - colLen;
-//     let dot;
-//
-//     if (dir == 'up') {
-//         for (let row = rowLen; row >= deepness; row--) {
-//             let id = `0:${row}`;
-//             dot = document.getElementById(id);
-//             // if (dot == null) {console.log(`${id} is null`)} else {console.log(id)}
-//
-//             await drawLine(switchDot, dot);
-//         }
-//         dir = 'right';
-//         gameOverClearScreen()
-//     } else if (dir == 'down') {
-//         for (let row = deepness; row < rowLen; row++) {
-//             let id = `${colLen - 1}:${row}`;
-//             dot = document.getElementById(id);
-//             await drawLine(switchDot, dot);
-//
-//             rowLen--;
-//             colLen--;
-//         }
-//         dir = 'left';
-//         gameOverClearScreen()
-//     } else if (dir == 'left') {
-//         for (let col = colLen - 1; col >= 0; col--) {
-//             let id = `${col}:${rowLen - 1}`;
-//             dot = document.getElementById(id);
-//             await drawLine(switchDot, dot);
-//         }
-//         dir = 'up';
-//         gameOverClearScreen()
-//     } else if (dir == 'right') {
-//         for (let col = deepness; col < colLen - 1; col++) {
-//             let id = `${col}:${deepness}`;
-//             // console.log(id);
-//             dot = document.getElementById(id);
-//             await drawLine(switchDot, dot);
-//         }
-//         dir = 'down';
-//         gameOverClearScreen()
-//     }
-//
-//
-// }
+// ----- ANIMATED CLEAR SCREEN -----
+var rowLen = yElements;
+var colLen = xElements;
+var deepness = 0;
+var dir = 'up';
+
+function drawLine(f, dot) {
+    return new Promise(resolve => {
+        setTimeout(function() {
+            // console.log(dot.id);
+            resolve(f(dot, 'on'));
+        }, 500)
+    });
+}
+
+async function clearScreenController() {
+    while (deepness < 5) {
+        await gameOverClearScreen();
+    }
+}
+
+async function gameOverClearScreen() {
+    deepness = xElements - colLen;
+    console.log(`deepness: ${deepness}`);
+    let dot;
+
+    if (dir == 'up') {
+        for (let row = rowLen; row >= deepness; row--) {
+            let id = `${dotMainBoardPrefix}:${deepness}:${row}`;
+            dot = document.getElementById(id);
+            if (dot == null) {console.log(`${id} is null`)} else {console.log(id)}
+
+            await drawLine(switchDot, dot);
+        }
+        dir = 'right';
+    } else if (dir == 'down') {
+        for (let row = deepness + 1; row < rowLen + 1; row++) {
+            let id = `${dotMainBoardPrefix}:${colLen}:${row}`;
+            dot = document.getElementById(id);
+            await drawLine(switchDot, dot);
+        }
+        rowLen--;
+        colLen--;
+        dir = 'left';
+    } else if (dir == 'left') {
+        for (let col = colLen; col >= deepness; col--) {
+            let id = `${dotMainBoardPrefix}:${col}:${rowLen + 1}`;
+            dot = document.getElementById(id);
+            await drawLine(switchDot, dot);
+        }
+        dir = 'up';
+    } else if (dir == 'right') {
+        for (let col = deepness + 1; col < colLen + 1; col++) {
+            let id = `${dotMainBoardPrefix}:${col}:${deepness}`;
+            // console.log(id);
+            dot = document.getElementById(id);
+            await drawLine(switchDot, dot);
+        }
+        dir = 'down';
+    }
+}
+// ---------------------------------
 
 
 function placeBrick() {
