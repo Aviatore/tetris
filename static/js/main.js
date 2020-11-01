@@ -20,6 +20,7 @@ const placeholderYElements = 3;
 const dotMainBoardPrefix = 'M';
 const dotPlaceholderBoardPrefix = 'P';
 let keyPadLock = false;
+var pause = false;
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -293,6 +294,36 @@ async function gameOverClearScreen(mode) {
 }
 // ---------------------------------
 
+
+// ----- ANIMATED CLEAR LINE -----
+async function clearLinesAnim(rows) {
+    pause = true;
+    let offset = 4;
+
+    let score = document.getElementById("current-score");
+    let rowNum = 1;
+    for (let row of rows) {
+        for (let col = offset; col >= 0; col--) {
+            let idLeft = `${dotMainBoardPrefix}:${col}:${row}`;
+            let idRight = `${dotMainBoardPrefix}:${xElements - offset}:${row}`;
+
+            let dotLeft = document.getElementById(idLeft);
+            let dotRight = document.getElementById(idRight);
+
+            let drawDotLeft = drawLine(switchOffB, dotLeft, 'off');
+            let drawDotRight = drawLine(switchOffB, dotRight, 'off');
+
+            await Promise.all([drawDotLeft, drawDotRight]);
+        }
+
+        score.innerText = Number(score.innerText) + (rowNum * pointsPerLine);
+        rowNum += pointsMultiplicate;
+    }
+    pause = false;
+}
+
+
+// -------------------------------
 
 function placeBrick() {
     for (let row = 0; row < brick.item.length; row++) {
