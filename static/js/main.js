@@ -202,12 +202,12 @@ var colLen;
 var deepness = 0;
 var dir;
 
-function drawLine(f, dot, mode) {
+function drawLine(f, dot, mode, timeout) {
     return new Promise(resolve => {
         setTimeout(function() {
             // console.log(dot.id);
             resolve(f(dot, mode));
-        }, 10)
+        }, timeout)
     });
 }
 
@@ -245,9 +245,9 @@ async function gameOverClearScreen(mode) {
             if (dot == null) {console.log(`${id} is null`)} else {console.log(id)}
 
             if (!dot.isMarked && mode == 'on') {
-                await drawLine(switchOffB, dot, mode);
+                await drawLine(switchOffB, dot, mode, 10);
             } else if (mode == 'off') {
-                await drawLine(switchOffB, dot, mode);
+                await drawLine(switchOffB, dot, mode, 10);
             }
         }
         dir = 'right';
@@ -257,9 +257,9 @@ async function gameOverClearScreen(mode) {
             dot = document.getElementById(id);
 
             if (!dot.isMarked && mode == 'on') {
-                await drawLine(switchOffB, dot, mode);
+                await drawLine(switchOffB, dot, mode, 10);
             } else if (mode == 'off') {
-                await drawLine(switchOffB, dot, mode);
+                await drawLine(switchOffB, dot, mode, 10);
             }
         }
         rowLen--;
@@ -271,9 +271,9 @@ async function gameOverClearScreen(mode) {
             dot = document.getElementById(id);
 
             if (!dot.isMarked && mode == 'on') {
-                await drawLine(switchOffB, dot, mode);
+                await drawLine(switchOffB, dot, mode, 10);
             } else if (mode == 'off') {
-                await drawLine(switchOffB, dot, mode);
+                await drawLine(switchOffB, dot, mode, 10);
             }
         }
         dir = 'up';
@@ -284,9 +284,9 @@ async function gameOverClearScreen(mode) {
             dot = document.getElementById(id);
 
             if (!dot.isMarked && mode == 'on') {
-                await drawLine(switchOffB, dot, mode);
+                await drawLine(switchOffB, dot, mode, 10);
             } else if (mode == 'off') {
-                await drawLine(switchOffB, dot, mode);
+                await drawLine(switchOffB, dot, mode, 10);
             }
         }
         dir = 'down';
@@ -305,13 +305,13 @@ async function clearLinesAnim(rows) {
     for (let row of rows) {
         for (let col = offset; col >= 0; col--) {
             let idLeft = `${dotMainBoardPrefix}:${col}:${row}`;
-            let idRight = `${dotMainBoardPrefix}:${xElements - offset}:${row}`;
+            let idRight = `${dotMainBoardPrefix}:${xElements - col}:${row}`;
 
             let dotLeft = document.getElementById(idLeft);
             let dotRight = document.getElementById(idRight);
 
-            let drawDotLeft = drawLine(switchOffB, dotLeft, 'off');
-            let drawDotRight = drawLine(switchOffB, dotRight, 'off');
+            let drawDotLeft = drawLine(switchOffB, dotLeft, 'off', 50);
+            let drawDotRight = drawLine(switchOffB, dotRight, 'off', 50);
 
             await Promise.all([drawDotLeft, drawDotRight]);
         }
@@ -397,9 +397,8 @@ function detectColission(direction) {
                     placeBrick();
                     console.log(`3 ${dot.id} ${dot.isMarkedB} ${nextId}`);
 
-                    [squashed, rows] = isLineFull();
-
-
+                    // [squashed, rows] = isLineFull();
+                    isLineFull();
 
                     return true;
                 }
@@ -647,7 +646,7 @@ function clearPlaceHolder() {
 
 function isLineFull() {
 
-    let rows = [];
+    let rows_tmp = [];
 
     for (let row = 0; row < yElements + 1; row++) {
         let counts = 0;
@@ -660,19 +659,25 @@ function isLineFull() {
         }
 
         if (counts == xElements + 1) {
-            rows.push(row);
+            rows_tmp.push(row);
         }
     }
 
-    if (rows.length > 0) {
+    if (rows_tmp.length > 0) {
         lock = true;
         console.log(`row Ids: ${rows}`);
-        clearLines(rows);
+        (async () => {clearLinesAnim(rows_tmp)})();
+        // clearLines(rows_tmp);
         // clearInterval(loop);
-        return [...[true, rows]];
+        // return [...[true, rows_tmp]];
+        squashed = true;
+        rows = rows_tmp;
+        return
     }
 
-    return [...[false, rows]];
+    squashed = false;
+    rows = rows_tmp;
+    // return [...[false, rows_tmp]];
 }
 
 function clearLines(rows) {
@@ -719,9 +724,17 @@ function squash(rows) {
 }
 
 function loops(direction = null) {
+    if (pause) {
+        console.log('pause');
+        return;
+    }
     if (squashed) {
         squash(rows);
         squashed = false;
+
+        brick.pos.x = 4;
+        brick.pos.y = brick.item.length * -1;
+
         return;
     }
 
