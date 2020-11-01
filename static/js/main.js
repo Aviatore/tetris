@@ -19,6 +19,7 @@ const placeholderXElements = 3;
 const placeholderYElements = 3;
 const dotMainBoardPrefix = 'M';
 const dotPlaceholderBoardPrefix = 'P';
+let keyPadLock = false;
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -60,29 +61,30 @@ function onLoad() {
 
     drawBrick();
     document.addEventListener('keydown', e => {
-        switch (e.key) {
-            // case "ArrowDown":
-            //     move('down');
-            //     break;
-            case "ArrowUp":
-                rotate();
-                break;
-            // case "ArrowLeft":
-            //     move('left');
-            //     break;
-            // case "ArrowRight":
-            //     move('right');
-            //     break;
-        }
+        if (!keyPadLock) {
+            switch (e.key) {
+                // case "ArrowDown":
+                //     move('down');
+                //     break;
+                case "ArrowUp":
+                    rotate();
+                    break;
+                // case "ArrowLeft":
+                //     move('left');
+                //     break;
+                // case "ArrowRight":
+                //     move('right');
+                //     break;
+            }
 
-        if (!detectColission(e.key) && !lock) {
-            // lock = true;
-            // move(e.key)
+            if (!detectColission(e.key) && !lock) {
+                // lock = true;
+                // move(e.key)
+                // drawBrick(e.key);
+                loops(e.key);
+            }
             // drawBrick(e.key);
-            loops(e.key);
         }
-        // drawBrick(e.key);
-
     })
 
     document.addEventListener('keyup', e => {
@@ -128,7 +130,7 @@ function onLoad() {
 
     drawBrickPlaceHolder();
     // gameOverClearScreen();
-    clearScreenController();
+    // clearScreenController();
 
 }
 
@@ -209,9 +211,11 @@ function drawLine(f, dot) {
 }
 
 async function clearScreenController() {
+    keyPadLock = true;
     while (deepness < 5) {
         await gameOverClearScreen();
     }
+    keyPadLock = false;
 }
 
 async function gameOverClearScreen() {
@@ -225,14 +229,19 @@ async function gameOverClearScreen() {
             dot = document.getElementById(id);
             if (dot == null) {console.log(`${id} is null`)} else {console.log(id)}
 
-            await drawLine(switchDot, dot);
+            if (!dot.isMarked) {
+                await drawLine(switchOffB, dot);
+            }
         }
         dir = 'right';
     } else if (dir == 'down') {
         for (let row = deepness + 1; row < rowLen + 1; row++) {
             let id = `${dotMainBoardPrefix}:${colLen}:${row}`;
             dot = document.getElementById(id);
-            await drawLine(switchDot, dot);
+
+            if (!dot.isMarked) {
+                await drawLine(switchOffB, dot);
+            }
         }
         rowLen--;
         colLen--;
@@ -241,7 +250,10 @@ async function gameOverClearScreen() {
         for (let col = colLen; col >= deepness; col--) {
             let id = `${dotMainBoardPrefix}:${col}:${rowLen + 1}`;
             dot = document.getElementById(id);
-            await drawLine(switchDot, dot);
+
+            if (!dot.isMarked) {
+                await drawLine(switchOffB, dot);
+            }
         }
         dir = 'up';
     } else if (dir == 'right') {
@@ -249,7 +261,10 @@ async function gameOverClearScreen() {
             let id = `${dotMainBoardPrefix}:${col}:${deepness}`;
             // console.log(id);
             dot = document.getElementById(id);
-            await drawLine(switchDot, dot);
+
+            if (!dot.isMarked) {
+                await drawLine(switchOffB, dot);
+            }
         }
         dir = 'down';
     }
@@ -274,6 +289,7 @@ function placeBrick() {
     if (brick.pos.y < 0) {
         console.log('Game over!');
         drawBrick();
+        clearScreenController();
         clearInterval(loop);
     }
 
