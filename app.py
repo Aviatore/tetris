@@ -38,4 +38,4 @@ def get_high_score():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

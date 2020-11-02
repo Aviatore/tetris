@@ -19,6 +19,10 @@ const placeholderXElements = 3;
 const placeholderYElements = 3;
 const dotMainBoardPrefix = 'M';
 const dotPlaceholderBoardPrefix = 'P';
+let mediumButtonLeft = document.querySelector('#medium-button-left')
+let mediumButtonRight = document.querySelector('#medium-button-right')
+let mediumButtonLow = document.querySelector('#medium-button-low')
+let bigButton = document.querySelector('#big-button')
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -65,6 +69,7 @@ function onLoad() {
             //     move('down');
             //     break;
             case "ArrowUp":
+                bigButton.classList.add('big-button')
                 rotate();
                 break;
             // case "ArrowLeft":
@@ -86,6 +91,10 @@ function onLoad() {
     })
 
     document.addEventListener('keyup', e => {
+        mediumButtonLeft.classList.remove('medium-button-left')
+        mediumButtonRight.classList.remove('medium-button-right')
+        mediumButtonLow.classList.remove('medium-button-low')
+        bigButton.classList.remove('big-button')
         lock = false;
     })
 
@@ -348,12 +357,16 @@ function detectColission(direction) {
 }
 
 function move(direction) {
+
     if (direction === 'ArrowLeft') {
+        mediumButtonLeft.classList.add('medium-button-left')
         brick.pos.x--;
     } else if (direction === 'ArrowRight') {
+        mediumButtonRight.classList.add('medium-button-right')
         brick.pos.x++;
     } else if (direction === 'ArrowDown') {
         // console.log(brick.pos.y + brick.item.length);
+        mediumButtonLow.classList.add('medium-button-low')
         brick.pos.y++;
     }
     // console.log(`x: ${brick.pos.x} y: ${brick.pos.y} len: ${brick.item.length}`);
