@@ -60,31 +60,31 @@ body {
 }
 
 .medium-button-low {
-    box-shadow: 0px 0px 6px 3px #000000 inset;
+    box-shadow: 0px 0px 16px 3px #000000 inset;
     /*border:3px solid black;*/
     z-index: 1;
     border-radius: 50px;
     position: absolute;
-    top: 741px;
-    left: 103px;
+    top: 742.7px;
+    left: 102.5px;
     width: 84px;
     height: 84px;
 }
 
 .medium-button-left {
-    box-shadow: 0px 0px 6px 3px #000000 inset;
+    box-shadow: 0px 0px 16px 3px #000000 inset;
     /*border:3px solid black;*/
     z-index: 1;
     border-radius: 50px;
     position: absolute;
-    top: 669px;
+    top: 670px;
     left: 24px;
     width: 84px;
     height: 84px;
 }
 
 .medium-button-right {
-    box-shadow: 0px 0px 6px 3px #000000 inset;
+    box-shadow: 0px 0px 16px 3px #000000 inset;
     /*border:3px solid black;*/
     z-index: 1;
     border-radius: 50px;
@@ -96,7 +96,7 @@ body {
 }
 
 .big-button {
-    box-shadow: 0px 0px 6px 3px #000000 inset;
+    box-shadow: 0px 0px 16px 3px #000000 inset;
     /*border:3px solid black;*/
     z-index: 1;
     border-radius: 85px;

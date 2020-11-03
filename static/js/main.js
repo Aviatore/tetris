@@ -679,12 +679,13 @@ function loops(direction = null) {
         } else {
             if (!detectColission('ArrowDown')) {
                 move('ArrowDown')
+                mediumButtonLow.classList.remove('medium-button-low')
                 drawBrick('ArrowDown');
             }
         }
     }
 }
 
-// loop = setInterval(loops, 1000);
+loop = setInterval(loops, 1000);
 // gameOverClearScreen();
 // gameOverLoop = setInterval(gameOverClearScreen, 1000);
