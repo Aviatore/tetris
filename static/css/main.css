@@ -11,7 +11,7 @@ body {
 #gamepad {
     position: absolute;
     /*border: 1px solid red;*/
-    background-image: url("/static/pics/gamepad.png");
+    background-image: url("/static/pics/gamepad_buttons.png");
     background-repeat: no-repeat;
     background-size: contain;
     height: 890px;
@@ -57,4 +57,52 @@ body {
 
 #placeholder {
     border: 1px solid black;
+}
+
+.medium-button-low {
+    box-shadow: 0px 0px 6px 3px #000000 inset;
+    /*border:3px solid black;*/
+    z-index: 1;
+    border-radius: 50px;
+    position: absolute;
+    top: 741px;
+    left: 103px;
+    width: 84px;
+    height: 84px;
+}
+
+.medium-button-left {
+    box-shadow: 0px 0px 6px 3px #000000 inset;
+    /*border:3px solid black;*/
+    z-index: 1;
+    border-radius: 50px;
+    position: absolute;
+    top: 669px;
+    left: 24px;
+    width: 84px;
+    height: 84px;
+}
+
+.medium-button-right {
+    box-shadow: 0px 0px 6px 3px #000000 inset;
+    /*border:3px solid black;*/
+    z-index: 1;
+    border-radius: 50px;
+    position: absolute;
+    top: 669px;
+    left: 176px;
+    width: 85px;
+    height: 85px;
+}
+
+.big-button {
+    box-shadow: 0px 0px 6px 3px #000000 inset;
+    /*border:3px solid black;*/
+    z-index: 1;
+    border-radius: 85px;
+    position: absolute;
+    top: 657px;
+    left: 324px;
+    width: 127px;
+    height: 127px;
 }

@@ -19,6 +19,10 @@ const placeholderXElements = 3;
 const placeholderYElements = 3;
 const dotMainBoardPrefix = 'M';
 const dotPlaceholderBoardPrefix = 'P';
+let mediumButtonLeft = document.querySelector('#medium-button-left')
+let mediumButtonRight = document.querySelector('#medium-button-right')
+let mediumButtonLow = document.querySelector('#medium-button-low')
+let bigButton = document.querySelector('#big-button')
 let keyPadLock = false;
 var pause = false;
 
@@ -64,18 +68,19 @@ function onLoad() {
     document.addEventListener('keydown', e => {
         if (!keyPadLock) {
             switch (e.key) {
-                // case "ArrowDown":
-                //     move('down');
-                //     break;
+                case "ArrowDown":
+                    mediumButtonLow.classList.add('medium-button-low');
+                    break;
                 case "ArrowUp":
+                    bigButton.classList.add('big-button');
                     rotate();
                     break;
-                // case "ArrowLeft":
-                //     move('left');
-                //     break;
-                // case "ArrowRight":
-                //     move('right');
-                //     break;
+                case "ArrowLeft":
+                    mediumButtonLeft.classList.add('medium-button-left');
+                    break;
+                case "ArrowRight":
+                    mediumButtonRight.classList.add('medium-button-right');
+                    break;
             }
 
             if (!detectColission(e.key) && !lock) {
@@ -89,6 +94,10 @@ function onLoad() {
     })
 
     document.addEventListener('keyup', e => {
+        mediumButtonLeft.classList.remove('medium-button-left')
+        mediumButtonRight.classList.remove('medium-button-right')
+        mediumButtonLow.classList.remove('medium-button-low')
+        bigButton.classList.remove('big-button')
         lock = false;
     })
 
@@ -756,6 +765,6 @@ function loops(direction = null) {
     }
 }
 
-// loop = setInterval(loops, 1000);
+loop = setInterval(loops, 1000);
 // gameOverClearScreen();
 // gameOverLoop = setInterval(gameOverClearScreen, 1000);
