@@ -106,3 +106,16 @@ body {
     width: 127px;
     height: 127px;
 }
+#mug {
+    color: #879571;
+}
+.pauseOff {
+    color: #879571;
+    font-family: 'auto digital';
+    font-size: 18px;
+}
+.pauseOn {
+    color: #000;
+    font-family: 'auto digital';
+    font-size: 18px;
+}

@@ -25,6 +25,9 @@ let mediumButtonLow = document.querySelector('#medium-button-low')
 let bigButton = document.querySelector('#big-button')
 let keyPadLock = false;
 var pause = false;
+let gamePause = false;
+let pauseBlink;
+
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -81,6 +84,8 @@ function onLoad() {
                 case "ArrowRight":
                     mediumButtonRight.classList.add('medium-button-right');
                     break;
+                case "i":
+                    pauseTheGame();
             }
 
             if (!detectColission(e.key) && !lock) {
@@ -103,6 +108,7 @@ function onLoad() {
 
 
     let scoreDiv = document.getElementById('score-panel');
+    // scoreDiv.style.border = '1px solid black';
     let currentScore = 999
     scoreDiv.innerHTML = `
        <h1 id="score-title">SCORE</h1>
@@ -114,7 +120,10 @@ function onLoad() {
        <h1 id="speed">0</h1>
        <h1 id="level-title">LEVEL</h1>
        <h1 id="level">0</h1>
-       <h1 id="speaker">&#128264;</h1>`;
+<!--       <h1 id="speaker">&#128264;</h1>-->
+      <h1>&nbsp;</h1><h1>&nbsp;</h1>
+       <i class="fas fa-mug-hot" id="mug"></i><br>
+        <span id="pause" class="pauseOff">PAUSE</span>`;
     let headings = scoreDiv.querySelectorAll('h1')
     for (let i = 0; i < headings.length; i++    ) {
         headings[i].style.fontFamily = 'auto digital';
@@ -621,6 +630,39 @@ function drawBrickPlaceHolder() {
                 switchDot(dot, 'on');
             }
         }
+    }
+}
+
+function pauseTheGame() {
+    let mug = document.getElementById('mug');
+    let pauseTxt = document.getElementById('pause');
+
+    if (!gamePause) {
+        gamePause = true;
+        mug.style.color = '#000';
+        pauseBlink = setInterval(blinkPause, 500);
+        clearInterval(loop);
+    } else if (gamePause) {
+        gamePause = false;
+        mug.style.color = '#879571';
+        clearInterval(pauseBlink);
+        if (pauseTxt.classList.contains('pauseOn')) {
+            pauseTxt.classList.remove('pauseOn');
+            pauseTxt.classList.add('pauseOff');
+        }
+        loop = setInterval(loops, 1000);
+    }
+}
+
+function blinkPause() {
+    let pauseTxt = document.getElementById('pause');
+
+    if (pauseTxt.classList.contains('pauseOff')) {
+        pauseTxt.classList.remove('pauseOff');
+        pauseTxt.classList.add('pauseOn');
+    } else {
+        pauseTxt.classList.remove('pauseOn');
+        pauseTxt.classList.add('pauseOff');
     }
 }
 
