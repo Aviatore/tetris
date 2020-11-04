@@ -65,19 +65,19 @@ function onLoad() {
     drawBrick();
     document.addEventListener('keydown', e => {
         switch (e.key) {
-            // case "ArrowDown":
-            //     move('down');
-            //     break;
+            case "ArrowDown":
+                mediumButtonLow.classList.add('medium-button-low');
+                break;
             case "ArrowUp":
-                bigButton.classList.add('big-button')
+                bigButton.classList.add('big-button');
                 rotate();
                 break;
-            // case "ArrowLeft":
-            //     move('left');
-            //     break;
-            // case "ArrowRight":
-            //     move('right');
-            //     break;
+            case "ArrowLeft":
+                mediumButtonLeft.classList.add('medium-button-left');
+                break;
+            case "ArrowRight":
+                mediumButtonRight.classList.add('medium-button-right');
+                break;
         }
 
         if (!detectColission(e.key) && !lock) {
@@ -359,14 +359,14 @@ function detectColission(direction) {
 function move(direction) {
 
     if (direction === 'ArrowLeft') {
-        mediumButtonLeft.classList.add('medium-button-left')
+
         brick.pos.x--;
     } else if (direction === 'ArrowRight') {
-        mediumButtonRight.classList.add('medium-button-right')
+
         brick.pos.x++;
     } else if (direction === 'ArrowDown') {
         // console.log(brick.pos.y + brick.item.length);
-        mediumButtonLow.classList.add('medium-button-low')
+
         brick.pos.y++;
     }
     // console.log(`x: ${brick.pos.x} y: ${brick.pos.y} len: ${brick.item.length}`);
@@ -679,7 +679,7 @@ function loops(direction = null) {
         } else {
             if (!detectColission('ArrowDown')) {
                 move('ArrowDown')
-                mediumButtonLow.classList.remove('medium-button-low')
+                // mediumButtonLow.classList.remove('medium-button-low')
                 drawBrick('ArrowDown');
             }
         }
