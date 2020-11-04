@@ -25,6 +25,9 @@ let mediumButtonLow = document.querySelector('#medium-button-low')
 let bigButton = document.querySelector('#big-button')
 let keyPadLock = false;
 var pause = false;
+let currentRows = 0
+let currentLevel = 1
+
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -110,10 +113,10 @@ function onLoad() {
        <h1 id="high-score-title">HI-SCORE</h1>
        <h1 id="high-score">0</h1>
        <div id="placeholder"></div>
-       <h1 id="speed-title">SPEED</h1>
-       <h1 id="speed">0</h1>
+       <h1 id="goal-title">GOAL</h1>
+       <h1 id="goal">0 / 10</h1>
        <h1 id="level-title">LEVEL</h1>
-       <h1 id="level">0</h1>
+       <h1 id="level">1</h1>
        <h1 id="speaker">&#128264;</h1>`;
     let headings = scoreDiv.querySelectorAll('h1')
     for (let i = 0; i < headings.length; i++    ) {
@@ -142,6 +145,18 @@ function onLoad() {
     // gameOverClearScreen();
     // clearScreenController();
 
+}
+
+function adjustLevel(rows, level) {
+    let goalID = document.querySelector('#goal')
+    let levelID = document.querySelector('#level')
+
+    goalID.innerHTML = `${rows} / ${level * 10}`
+    levelID.innerHTML = level
+}
+
+function levelUp(rows, level) {
+    if (rows === level * 10) {currentRows = 0, currentLevel++}
 }
 
 function randomRotation() {
@@ -408,7 +423,8 @@ function detectColission(direction) {
 
                     // [squashed, rows] = isLineFull();
                     isLineFull();
-
+                    levelUp(currentRows, currentLevel)
+                    adjustLevel(currentRows, currentLevel)
                     return true;
                 }
             }
@@ -681,6 +697,7 @@ function isLineFull() {
         // return [...[true, rows_tmp]];
         squashed = true;
         rows = rows_tmp;
+        currentRows += rows_tmp.length
         return
     }
 
