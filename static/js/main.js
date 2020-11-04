@@ -23,6 +23,8 @@ let mediumButtonLeft = document.querySelector('#medium-button-left')
 let mediumButtonRight = document.querySelector('#medium-button-right')
 let mediumButtonLow = document.querySelector('#medium-button-low')
 let bigButton = document.querySelector('#big-button')
+let keyPadLock = false;
+var pause = false;
 
 document.addEventListener('DOMContentLoaded', onLoad);
 
@@ -64,30 +66,31 @@ function onLoad() {
 
     drawBrick();
     document.addEventListener('keydown', e => {
-        switch (e.key) {
-            // case "ArrowDown":
-            //     move('down');
-            //     break;
-            case "ArrowUp":
-                bigButton.classList.add('big-button')
-                rotate();
-                break;
-            // case "ArrowLeft":
-            //     move('left');
-            //     break;
-            // case "ArrowRight":
-            //     move('right');
-            //     break;
-        }
+        if (!keyPadLock) {
+            switch (e.key) {
+                case "ArrowDown":
+                    mediumButtonLow.classList.add('medium-button-low');
+                    break;
+                case "ArrowUp":
+                    bigButton.classList.add('big-button');
+                    rotate();
+                    break;
+                case "ArrowLeft":
+                    mediumButtonLeft.classList.add('medium-button-left');
+                    break;
+                case "ArrowRight":
+                    mediumButtonRight.classList.add('medium-button-right');
+                    break;
+            }
 
-        if (!detectColission(e.key) && !lock) {
-            // lock = true;
-            // move(e.key)
+            if (!detectColission(e.key) && !lock) {
+                // lock = true;
+                // move(e.key)
+                // drawBrick(e.key);
+                loops(e.key);
+            }
             // drawBrick(e.key);
-            loops(e.key);
         }
-        // drawBrick(e.key);
-
     })
 
     document.addEventListener('keyup', e => {
@@ -137,7 +140,7 @@ function onLoad() {
 
     drawBrickPlaceHolder();
     // gameOverClearScreen();
-
+    // clearScreenController();
 
 }
 
@@ -202,67 +205,134 @@ let brick = {
     }
 };
 
-// var rowLen = yElements;
-// var colLen = xElements;
-// var deepness;
-// var dir = 'up';
-//
-// function drawLine(f, dot) {
-//     return new Promise(resolve => {
-//         setTimeout(function() {
-//             // console.log(dot.id);
-//             resolve(f(dot, 'on'));
-//         }, 1000)
-//     });
-// }
-//
-// async function gameOverClearScreen() {
-//     deepness = xElements - colLen;
-//     let dot;
-//
-//     if (dir == 'up') {
-//         for (let row = rowLen; row >= deepness; row--) {
-//             let id = `0:${row}`;
-//             dot = document.getElementById(id);
-//             // if (dot == null) {console.log(`${id} is null`)} else {console.log(id)}
-//
-//             await drawLine(switchDot, dot);
-//         }
-//         dir = 'right';
-//         gameOverClearScreen()
-//     } else if (dir == 'down') {
-//         for (let row = deepness; row < rowLen; row++) {
-//             let id = `${colLen - 1}:${row}`;
-//             dot = document.getElementById(id);
-//             await drawLine(switchDot, dot);
-//
-//             rowLen--;
-//             colLen--;
-//         }
-//         dir = 'left';
-//         gameOverClearScreen()
-//     } else if (dir == 'left') {
-//         for (let col = colLen - 1; col >= 0; col--) {
-//             let id = `${col}:${rowLen - 1}`;
-//             dot = document.getElementById(id);
-//             await drawLine(switchDot, dot);
-//         }
-//         dir = 'up';
-//         gameOverClearScreen()
-//     } else if (dir == 'right') {
-//         for (let col = deepness; col < colLen - 1; col++) {
-//             let id = `${col}:${deepness}`;
-//             // console.log(id);
-//             dot = document.getElementById(id);
-//             await drawLine(switchDot, dot);
-//         }
-//         dir = 'down';
-//         gameOverClearScreen()
-//     }
-//
-//
-// }
+// ----- ANIMATED CLEAR SCREEN -----
+var rowLen;
+var colLen;
+var deepness = 0;
+var dir;
 
+function drawLine(f, dot, mode, timeout) {
+    return new Promise(resolve => {
+        setTimeout(function() {
+            // console.log(dot.id);
+            resolve(f(dot, mode));
+        }, timeout)
+    });
+}
+
+async function clearScreenController() {
+    rowLen = yElements;
+    colLen = xElements;
+    deepness = 0;
+    dir = 'up';
+
+    keyPadLock = true;
+    while (deepness < 5) {
+        await gameOverClearScreen('on');
+    }
+
+    rowLen = yElements;
+    colLen = xElements;
+    dir = 'up';
+    deepness = 0;
+
+    while (deepness < 5) {
+        await gameOverClearScreen('off');
+    }
+    keyPadLock = false;
+}
+
+async function gameOverClearScreen(mode) {
+    deepness = xElements - colLen;
+    console.log(`deepness: ${deepness}`);
+    let dot;
+
+    if (dir == 'up') {
+        for (let row = rowLen; row >= deepness; row--) {
+            let id = `${dotMainBoardPrefix}:${deepness}:${row}`;
+            dot = document.getElementById(id);
+            if (dot == null) {console.log(`${id} is null`)} else {console.log(id)}
+
+            if (!dot.isMarked && mode == 'on') {
+                await drawLine(switchOffB, dot, mode, 10);
+            } else if (mode == 'off') {
+                await drawLine(switchOffB, dot, mode, 10);
+            }
+        }
+        dir = 'right';
+    } else if (dir == 'down') {
+        for (let row = deepness + 1; row < rowLen + 1; row++) {
+            let id = `${dotMainBoardPrefix}:${colLen}:${row}`;
+            dot = document.getElementById(id);
+
+            if (!dot.isMarked && mode == 'on') {
+                await drawLine(switchOffB, dot, mode, 10);
+            } else if (mode == 'off') {
+                await drawLine(switchOffB, dot, mode, 10);
+            }
+        }
+        rowLen--;
+        colLen--;
+        dir = 'left';
+    } else if (dir == 'left') {
+        for (let col = colLen; col >= deepness; col--) {
+            let id = `${dotMainBoardPrefix}:${col}:${rowLen + 1}`;
+            dot = document.getElementById(id);
+
+            if (!dot.isMarked && mode == 'on') {
+                await drawLine(switchOffB, dot, mode, 10);
+            } else if (mode == 'off') {
+                await drawLine(switchOffB, dot, mode, 10);
+            }
+        }
+        dir = 'up';
+    } else if (dir == 'right') {
+        for (let col = deepness + 1; col < colLen + 1; col++) {
+            let id = `${dotMainBoardPrefix}:${col}:${deepness}`;
+            // console.log(id);
+            dot = document.getElementById(id);
+
+            if (!dot.isMarked && mode == 'on') {
+                await drawLine(switchOffB, dot, mode, 10);
+            } else if (mode == 'off') {
+                await drawLine(switchOffB, dot, mode, 10);
+            }
+        }
+        dir = 'down';
+    }
+}
+// ---------------------------------
+
+
+// ----- ANIMATED CLEAR LINE -----
+async function clearLinesAnim(rows) {
+    pause = true;
+    let offset = 4;
+
+    let score = document.getElementById("current-score");
+    let rowNum = 1;
+    for (let row of rows) {
+        for (let col = offset; col >= 0; col--) {
+            let idLeft = `${dotMainBoardPrefix}:${col}:${row}`;
+            let idRight = `${dotMainBoardPrefix}:${xElements - col}:${row}`;
+
+            let dotLeft = document.getElementById(idLeft);
+            let dotRight = document.getElementById(idRight);
+
+            let drawDotLeft = drawLine(switchOffB, dotLeft, 'off', 50);
+            let drawDotRight = drawLine(switchOffB, dotRight, 'off', 50);
+
+            await Promise.all([drawDotLeft, drawDotRight]);
+        }
+
+        score.innerText = Number(score.innerText) + (rowNum * pointsPerLine);
+        rowNum += pointsMultiplicate;
+    }
+    pause = false;
+}
+
+
+// -------------------------------
 
 function placeBrick() {
     for (let row = 0; row < brick.item.length; row++) {
@@ -281,6 +351,7 @@ function placeBrick() {
     if (brick.pos.y < 0) {
         console.log('Game over!');
         drawBrick();
+        clearScreenController();
         clearInterval(loop);
     }
 
@@ -335,9 +406,8 @@ function detectColission(direction) {
                     placeBrick();
                     console.log(`3 ${dot.id} ${dot.isMarkedB} ${nextId}`);
 
-                    [squashed, rows] = isLineFull();
-
-
+                    // [squashed, rows] = isLineFull();
+                    isLineFull();
 
                     return true;
                 }
@@ -357,16 +427,12 @@ function detectColission(direction) {
 }
 
 function move(direction) {
-
     if (direction === 'ArrowLeft') {
-        mediumButtonLeft.classList.add('medium-button-left')
         brick.pos.x--;
     } else if (direction === 'ArrowRight') {
-        mediumButtonRight.classList.add('medium-button-right')
         brick.pos.x++;
     } else if (direction === 'ArrowDown') {
         // console.log(brick.pos.y + brick.item.length);
-        mediumButtonLow.classList.add('medium-button-low')
         brick.pos.y++;
     }
     // console.log(`x: ${brick.pos.x} y: ${brick.pos.y} len: ${brick.item.length}`);
@@ -589,7 +655,7 @@ function clearPlaceHolder() {
 
 function isLineFull() {
 
-    let rows = [];
+    let rows_tmp = [];
 
     for (let row = 0; row < yElements + 1; row++) {
         let counts = 0;
@@ -602,19 +668,25 @@ function isLineFull() {
         }
 
         if (counts == xElements + 1) {
-            rows.push(row);
+            rows_tmp.push(row);
         }
     }
 
-    if (rows.length > 0) {
+    if (rows_tmp.length > 0) {
         lock = true;
         console.log(`row Ids: ${rows}`);
-        clearLines(rows);
+        (async () => {clearLinesAnim(rows_tmp)})();
+        // clearLines(rows_tmp);
         // clearInterval(loop);
-        return [...[true, rows]];
+        // return [...[true, rows_tmp]];
+        squashed = true;
+        rows = rows_tmp;
+        return
     }
 
-    return [...[false, rows]];
+    squashed = false;
+    rows = rows_tmp;
+    // return [...[false, rows_tmp]];
 }
 
 function clearLines(rows) {
@@ -661,9 +733,17 @@ function squash(rows) {
 }
 
 function loops(direction = null) {
+    if (pause) {
+        console.log('pause');
+        return;
+    }
     if (squashed) {
         squash(rows);
         squashed = false;
+
+        brick.pos.x = 4;
+        brick.pos.y = brick.item.length * -1;
+
         return;
     }
 
@@ -679,7 +759,6 @@ function loops(direction = null) {
         } else {
             if (!detectColission('ArrowDown')) {
                 move('ArrowDown')
-                mediumButtonLow.classList.remove('medium-button-low')
                 drawBrick('ArrowDown');
             }
         }
