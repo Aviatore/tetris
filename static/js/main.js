@@ -27,6 +27,7 @@ let keyPadLock = false;
 var pause = false;
 let currentRows = 0
 let currentLevel = 1
+let speed = 1000
 
 
 document.addEventListener('DOMContentLoaded', onLoad);
@@ -114,7 +115,7 @@ function onLoad() {
        <h1 id="high-score">0</h1>
        <div id="placeholder"></div>
        <h1 id="goal-title">GOAL</h1>
-       <h1 id="goal">0 / 10</h1>
+       <h1 id="goal">0 / 5</h1>
        <h1 id="level-title">LEVEL</h1>
        <h1 id="level">1</h1>
        <h1 id="speaker">&#128264;</h1>`;
@@ -151,12 +152,15 @@ function adjustLevel(rows, level) {
     let goalID = document.querySelector('#goal')
     let levelID = document.querySelector('#level')
 
-    goalID.innerHTML = `${rows} / ${level * 10}`
+    goalID.innerHTML = `${rows} / ${level * 5}`
     levelID.innerHTML = level
+    speed = 1000 - (currentLevel * 90)
+    clearInterval(loop)
+    loop = setInterval(loops, speed)
 }
 
 function levelUp(rows, level) {
-    if (rows === level * 10) {currentRows = 0, currentLevel++}
+    if (rows >= level * 5) {currentRows = 0, currentLevel++}
 }
 
 function randomRotation() {
@@ -584,8 +588,6 @@ function switchOffB(dot, x) {
     }
 }
 
-
-
 function drawBrick(direction=null) {
     clear();
 
@@ -782,6 +784,9 @@ function loops(direction = null) {
     }
 }
 
-loop = setInterval(loops, 1000);
+loop = setInterval(loops, speed)
+
+
+
 // gameOverClearScreen();
 // gameOverLoop = setInterval(gameOverClearScreen, 1000);
