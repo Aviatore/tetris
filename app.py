@@ -1,4 +1,5 @@
 from flask import Flask, request, make_response, render_template, send_from_directory
+from flask_cors import CORS
 from database import db, queries
 import json
 

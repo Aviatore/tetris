@@ -151,6 +151,7 @@ function onLoad() {
     // gameOverClearScreen();
     // clearScreenController();
 
+    get_highscore();
 }
 
 function randomRotation() {
@@ -805,6 +806,20 @@ function loops(direction = null) {
             }
         }
     }
+}
+
+function get_highscore() {
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", function(event) {
+        if (xhr.status === 200) {
+            let h1_highscore = document.getElementById("high-score");
+            let highscore = JSON.parse(xhr.response);
+            highscore.innerText = highscore.highscore;
+        }
+    });
+
+    xhr.open("GET", "localhost:5000/highscore", true);
+    xhr.send();
 }
 
 loop = setInterval(loops, 1000);
