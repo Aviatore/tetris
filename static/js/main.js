@@ -25,6 +25,10 @@ let mediumButtonLow = document.querySelector('#medium-button-low')
 let bigButton = document.querySelector('#big-button')
 let keyPadLock = false;
 var pause = false;
+let currentRows = 0
+let currentLevel = 1
+let speed = 1000
+
 let gamePause = false;
 let pauseBlink;
 
@@ -108,7 +112,6 @@ function onLoad() {
 
 
     let scoreDiv = document.getElementById('score-panel');
-    // scoreDiv.style.border = '1px solid black';
     let currentScore = 999
     scoreDiv.innerHTML = `
        <h1 id="score-title">SCORE</h1>
@@ -116,10 +119,10 @@ function onLoad() {
        <h1 id="high-score-title">HI-SCORE</h1>
        <h1 id="high-score">0</h1>
        <div id="placeholder"></div>
-       <h1 id="speed-title">SPEED</h1>
-       <h1 id="speed">0</h1>
+       <h1 id="goal-title">GOAL</h1>
+       <h1 id="goal">0 / 5</h1>
        <h1 id="level-title">LEVEL</h1>
-       <h1 id="level">0</h1>
+       <h1 id="level">1</h1>
 <!--       <h1 id="speaker">&#128264;</h1>-->
       <h1>&nbsp;</h1><h1>&nbsp;</h1>
        <i class="fas fa-mug-hot" id="mug"></i><br>
@@ -152,6 +155,21 @@ function onLoad() {
     // clearScreenController();
 
     get_highscore();
+}
+
+function adjustLevel(rows, level) {
+    let goalID = document.querySelector('#goal')
+    let levelID = document.querySelector('#level')
+
+    goalID.innerHTML = `${rows} / ${level * 5}`
+    levelID.innerHTML = level
+    speed = 1000 - (currentLevel * 90)
+    clearInterval(loop)
+    loop = setInterval(loops, speed)
+}
+
+function levelUp(rows, level) {
+    if (rows >= level * 5) {currentRows = 0, currentLevel++}
 }
 
 function randomRotation() {
@@ -422,7 +440,8 @@ function detectColission(direction) {
 
                     // [squashed, rows] = isLineFull();
                     isLineFull();
-
+                    levelUp(currentRows, currentLevel)
+                    adjustLevel(currentRows, currentLevel)
                     return true;
                 }
             }
@@ -582,8 +601,6 @@ function switchOffB(dot, x) {
     }
 }
 
-
-
 function drawBrick(direction=null) {
     clear();
 
@@ -728,6 +745,7 @@ function isLineFull() {
         // return [...[true, rows_tmp]];
         squashed = true;
         rows = rows_tmp;
+        currentRows += rows_tmp.length
         return
     }
 
@@ -811,6 +829,10 @@ function loops(direction = null) {
         }
     }
 }
+
+loop = setInterval(loops, speed)
+
+
 
 function get_highscore(score=null) {
     const xhr = new XMLHttpRequest();
