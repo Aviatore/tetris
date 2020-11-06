@@ -1,16 +1,13 @@
-var container;
-var container;
-var width = 14;
-var height = 14;
-var xElements = 9;
-var yElements = 19;
-var brickMargin = (30 * width) / 200;
-var marginTop = (-30 * width) / 200;
-var outline = (28 * width) / 200;
-var loop;
-var gameOverLoop;
-// container = document.getElementById('container');
-var lock = false;
+let container;
+let width = 14;
+let height = 14;
+let xElements = 9;
+let yElements = 19;
+let brickMargin = (30 * width) / 200;
+let marginTop = (-30 * width) / 200;
+let outline = (28 * width) / 200;
+let loop;
+let lock = false;
 let squashed = false;
 let rows = [];
 let pointsPerLine = 100;
@@ -24,7 +21,7 @@ let mediumButtonRight = document.querySelector('#medium-button-right')
 let mediumButtonLow = document.querySelector('#medium-button-low')
 let bigButton = document.querySelector('#big-button')
 let keyPadLock = false;
-var pause = false;
+let pause = false;
 let currentRows = 0
 let currentLevel = 1
 let speed = 1000
@@ -275,6 +272,8 @@ async function clearScreenController() {
     keyPadLock = false;
 
     speed = 1000;
+    let lvl = document.getElementById('level');
+    lvl.innerText = '0';
     loop = setInterval(loops, speed);
 }
 
