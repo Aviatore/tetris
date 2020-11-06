@@ -158,18 +158,23 @@ function onLoad() {
 }
 
 function adjustLevel(rows, level) {
-    let goalID = document.querySelector('#goal')
-    let levelID = document.querySelector('#level')
+    if (keyPadLock) {return} // Prevent start a loop during the screen clearing
 
-    goalID.innerHTML = `${rows} / ${level * 5}`
-    levelID.innerHTML = level
-    speed = 1000 - (currentLevel * 90)
-    clearInterval(loop)
-    loop = setInterval(loops, speed)
+    let goalID = document.querySelector('#goal');
+    let levelID = document.querySelector('#level');
+
+    goalID.innerHTML = `${rows} / ${level * 5}`;
+    levelID.innerHTML = level;
+    speed = 1000 - (currentLevel * 90);
+    clearInterval(loop);
+    loop = setInterval(loops, speed);
 }
 
 function levelUp(rows, level) {
-    if (rows >= level * 5) {currentRows = 0, currentLevel++}
+    if (rows >= level * 5) {
+        currentRows = 0;
+        currentLevel++;
+    }
 }
 
 function randomRotation() {
@@ -268,6 +273,9 @@ async function clearScreenController() {
         await gameOverClearScreen('off');
     }
     keyPadLock = false;
+
+    speed = 1000;
+    loop = setInterval(loops, speed);
 }
 
 async function gameOverClearScreen(mode) {
@@ -830,7 +838,7 @@ function loops(direction = null) {
     }
 }
 
-loop = setInterval(loops, speed)
+loop = setInterval(loops, speed);
 
 
 
@@ -855,6 +863,6 @@ function get_highscore(score=null) {
     xhr.send();
 }
 
-loop = setInterval(loops, 1000);
+// loop = setInterval(loops, 1000);
 // gameOverClearScreen();
 // gameOverLoop = setInterval(gameOverClearScreen, 1000);
