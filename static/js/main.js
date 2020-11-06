@@ -151,6 +151,7 @@ function onLoad() {
     // gameOverClearScreen();
     // clearScreenController();
 
+    get_highscore();
 }
 
 function randomRotation() {
@@ -362,6 +363,10 @@ function placeBrick() {
         drawBrick();
         clearScreenController();
         clearInterval(loop);
+
+        let score = document.getElementById("current-score");
+        get_highscore(Number(score.innerText));
+        score.innerText = '0';
     }
 
     // Update current brick
@@ -805,6 +810,27 @@ function loops(direction = null) {
             }
         }
     }
+}
+
+function get_highscore(score=null) {
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", e => {
+        if (xhr.status === 200) {
+
+            let h1_highscore = document.getElementById("high-score");
+            let highscore = JSON.parse(xhr.response);
+            console.log(`highscore: ${highscore.highscore}`);
+            h1_highscore.innerText = highscore.highscore;
+        }
+    });
+
+    if (score === null) {
+        xhr.open("GET", "/highscore", true);
+    } else {
+        xhr.open("GET", `/highscore/${score}`, true);
+    }
+
+    xhr.send();
 }
 
 loop = setInterval(loops, 1000);
