@@ -47,7 +47,8 @@ body {
     width: 120px;
     top: 70px;
     transform: translateX(50px);
-
+    text-align: center;
+    background-color: #9aa680;
 }
 .outerContainer {
     width: 400px;
@@ -56,6 +57,8 @@ body {
 }
 
 #placeholder {
+    display: inline-block;
+    padding: 8px 2px 2px 2px;
     border: 1px solid black;
 }
 
@@ -118,4 +121,11 @@ body {
     color: #000;
     font-family: 'auto digital';
     font-size: 18px;
+}
+h1, span, i {
+    font-family: 'auto digital';
+    font-size: 18px;
+    text-align: center;
+    background-color: #9aa680;
+
 }
