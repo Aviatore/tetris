@@ -1,0 +1,131 @@
+body {
+    overflow: hidden;
+}
+#body {
+    position: absolute;
+
+    height: 100%;
+    width: 100%;
+
+}
+#gamepad {
+    position: absolute;
+    /*border: 1px solid red;*/
+    background-image: url("/static/pics/gamepad_buttons.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 890px;
+    width: 502px;
+    margin: auto;
+    z-index: 1;
+    left: 50%;
+    box-sizing: border-box;
+    transform: translateX(-50%);
+}
+#container {
+    top: 70px;
+    left: 50px;
+    position: relative;
+    display: inline-block;
+    border: 1px solid black;
+    background-color: #9aa680;
+    padding: 5px;
+
+}
+#bcg {
+    position: absolute;
+    height: 890px;
+    width: 502px;
+    margin: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #9aa680;
+}
+#score-panel {
+    display: inline-block;
+    position: absolute;
+    width: 120px;
+    top: 70px;
+    transform: translateX(50px);
+    text-align: center;
+    background-color: #9aa680;
+}
+.outerContainer {
+    width: 400px;
+
+    margin: auto;
+}
+
+#placeholder {
+    display: inline-block;
+    padding: 8px 2px 2px 2px;
+    border: 1px solid black;
+}
+
+.medium-button-low {
+    box-shadow: 0px 0px 6px 3px #000000 inset;
+    /*border:3px solid black;*/
+    z-index: 1;
+    border-radius: 50px;
+    position: absolute;
+    top: 741px;
+    left: 103px;
+    width: 84px;
+    height: 84px;
+}
+
+.medium-button-left {
+    box-shadow: 0px 0px 6px 3px #000000 inset;
+    /*border:3px solid black;*/
+    z-index: 1;
+    border-radius: 50px;
+    position: absolute;
+    top: 669px;
+    left: 24px;
+    width: 84px;
+    height: 84px;
+}
+
+.medium-button-right {
+    box-shadow: 0px 0px 6px 3px #000000 inset;
+    /*border:3px solid black;*/
+    z-index: 1;
+    border-radius: 50px;
+    position: absolute;
+    top: 669px;
+    left: 176px;
+    width: 85px;
+    height: 85px;
+}
+
+.big-button {
+    box-shadow: 0px 0px 6px 3px #000000 inset;
+    /*border:3px solid black;*/
+    z-index: 1;
+    border-radius: 85px;
+    position: absolute;
+    top: 657px;
+    left: 324px;
+    width: 127px;
+    height: 127px;
+}
+#mug {
+    color: #879571;
+}
+.pauseOff {
+    color: #879571;
+    font-family: 'auto digital';
+    font-size: 18px;
+}
+.pauseOn {
+    color: #000;
+    font-family: 'auto digital';
+    font-size: 18px;
+}
+h1, span, i {
+    font-family: 'auto digital';
+    font-size: 18px;
+    text-align: center;
+    background-color: #9aa680;
+
+}
